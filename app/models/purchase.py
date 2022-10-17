@@ -30,3 +30,15 @@ ORDER BY time_purchased DESC
                               uid=uid,
                               since=since)
         return [Purchase(*row) for row in rows]
+
+    # Homework 4: Given a user id, find all purchases of that user.
+    @staticmethod
+    def get_every_purchase_by_uid(uid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_purchased
+FROM Purchases
+WHERE uid = :uid
+ORDER BY time_purchased DESC
+''',
+                              uid=uid)
+        return Purchase(*(rows[0])) if rows else None
