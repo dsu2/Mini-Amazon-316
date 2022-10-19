@@ -37,8 +37,8 @@ ORDER BY time_purchased DESC
         rows = app.db.execute('''
 SELECT id, uid, pid, time_purchased
 FROM Purchases
-WHERE uid = :uid
+WHERE uid = 9
 ORDER BY time_purchased DESC
 ''',
                               uid=uid)
-        return Purchase(*(rows[0])) if rows else None
+        return [Purchase(*row) for row in rows]

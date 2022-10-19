@@ -16,10 +16,11 @@ def index():
     # find the products current user has bought:
     if current_user.is_authenticated:
         '''
+        code that was here before:
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
         '''
-        all_purchases = Purchase.get_all_just_by_uid(
+        all_purchases = Purchase.get_every_purchase_by_uid(
             current_user.id)
     else:
         all_purchases = None
