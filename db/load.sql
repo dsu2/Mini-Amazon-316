@@ -10,15 +10,20 @@ SELECT pg_catalog.setval('public.products_id_seq',
                          (SELECT MAX(id)+1 FROM Products),
                          false);
 
-\COPY Purchases FROM '/home/vcm/Mini-Amazon-316/db/generated/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(id)+1 FROM Purchases),
-                         false);
-
 \COPY Sellers FROM '/home/vcm/Mini-Amazon-316/db/generated/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.sellers_id_seq',
                          (SELECT MAX(id)+1 FROM Sellers),
                          false);
+
+\COPY Purchases FROM '/home/vcm/Mini-Amazon-316/db/generated/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.purchases_id_seq',
+                         (SELECT MAX(id)+1 FROM Purchases),
+                         false);
+                         
 \COPY Inventory FROM '/home/vcm/Mini-Amazon-316/db/generated/Inventory.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY ProductReviews FROM '/home/vcm/Mini-Amazon-316/db/generated/ProductReviews.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY SellerReviews FROM '/home/vcm/Mini-Amazon-316/db/generated/SellerReviews.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY Line-item FROM '/home/vcm/Mini-Amazon-316/db/generated/Line_item.csv' WITH DELIMITER ',' NULL '' CSV
