@@ -37,7 +37,7 @@ def index():
         purchases = None
     # Given a user id, find the items in the cart for that user.
     cform = GetUserItemForm()
-    if rform.validate_on_submit():
+    if cform.validate_on_submit():
         user_items = Cart.get_cart(cform.uid.data)
     else:
         user_items = None
@@ -45,5 +45,5 @@ def index():
     return render_template('index.html',
                            avail_products=products,
                            purchase_history=purchases,
-                           item_in_cart = user_items,
+                           item_in_cart=user_items,
                            form=form)
