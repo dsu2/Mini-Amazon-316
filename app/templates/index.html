@@ -3,6 +3,17 @@
 {% block content %}
 
 <br><br>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.k.label }}
+    {{ form.k(type="number", min="1", max="300") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
