@@ -15,11 +15,11 @@
   </thead>
   <tbody>
     {% for product in avail_products%}
-      <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-      </tr>
+    <tr>
+      <th scope="row">{{product.id}}</th>
+      <td>{{product.name}}</td>
+      <td>{{product.price}}</td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>
@@ -37,11 +37,11 @@
   </thead>
   <tbody>
     {% for purchase in purchase_history%}
-      <tr>
-        <th scope="row">{{purchase.id}}</th>
-        <td>{{purchase.pid}}</td>
-        <td>{{purchase.time_purchased}}</td>
-      </tr>
+    <tr>
+      <th scope="row">{{purchase.id}}</th>
+      <td>{{purchase.pid}}</td>
+      <td>{{purchase.time_purchased}}</td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>

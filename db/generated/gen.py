@@ -78,7 +78,7 @@ def gen_sellers():
             if sid % 10 == 0:
                 print(f'{sid}', end=' ', flush=True)
             uid = fake.unique.random_int(0, 100)
-            writer.writerow([uid, sid])
+            writer.writerow([sid, uid])
             available_sids.append(sid)
         print(f'{num_sellers} generated')
     fake.unique.clear()
@@ -105,19 +105,19 @@ def gen_product_review():
             print(f'{numreviews} generated')
     return
 
-
-def gen_inventory(available_sids, available_pids):
+def gen_inventory(available_sids):
     with open('Inventory.csv', 'w') as f:
         writer = get_csv_writer(f)
-        print('Inventory...', end=' ', flush=True)
-        for pid in range(num_products):
+        print('Inventory...', end = ' ', flush = True)
+        for pid in range(num_products-1):
             if pid % 100 == 0:
                 print(f'{pid}', end=' ', flush=True)
             invNum = fake.random_int(0, 1000)
             sid = fake.random_element(elements=available_sids)
-            pid = fake.random_element(elements=available_pids)
+            pid = fake.unique.random_int(0, (num_products-1))
             writer.writerow([sid, pid, invNum])
         print(f'{num_products} generated')
+    fake.unique.clear()
     return
 
 
@@ -126,4 +126,4 @@ available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 available_sids = gen_sellers()
 gen_product_review()
-gen_inventory(available_sids, available_pids)
+gen_inventory(available_sids)
