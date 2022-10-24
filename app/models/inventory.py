@@ -31,3 +31,14 @@ WHERE uid = :uid
 ''',
                               id=id)
         return Inventory(*(rows[0])) if rows else None
+
+    @staticmethod
+    def get_by_sid(id):
+        rows = app.db.execute('''
+SELECT uid, pid, count
+FROM Inventory
+WHERE sid = :sid
+''',
+                              id=id)
+        return Inventory(*(rows[0])) if rows else None
+
