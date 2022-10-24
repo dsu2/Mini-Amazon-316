@@ -2,10 +2,7 @@ from flask import current_app as app
 
 
 class Cart:
-    """
-    This is just a TEMPLATE for Cart, you should change this by adding or 
-        replacing new columns, etc. for your design.
-    """
+
     def __init__(self, id, uid, pid, time_added_to_cart):
         self.id = id
         self.uid = uid
@@ -33,4 +30,14 @@ ORDER BY time_added_to_cart DESC
 ''',
                               uid=uid,
                               since=since)
+        return [Cart(*row) for row in rows]
+
+    @staticmethod
+    def get_Cart(uid):
+        rows = app.db.execute('''
+SELECT Products, num_item
+FROM Line-item
+WHERE uid = :uid
+''',
+                              uid=uid)
         return [Cart(*row) for row in rows]

@@ -6,7 +6,8 @@ CREATE TABLE Users (
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL
+    lastname VARCHAR(255) NOT NULL,
+    tol_price DECIMAL(12,2) NOT NULL,
 );
 
 CREATE TABLE Products (
@@ -34,3 +35,13 @@ CREATE TABLE Inventory (
     invNum INT,
     PRIMARY KEY (sid,pid)
 )
+
+CREATE TABLE Line_item (
+    uid INT NOT NULL REFERENCES Users(id),
+    pid INT NOT NULL REFERENCES Products(id),
+    sid INT NOT NULL REFERENCES Sellers(id),
+    num_item INT,
+    PRIMARY KEY (uid, pid, sid)
+
+)
+
