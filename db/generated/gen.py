@@ -105,7 +105,7 @@ def gen_inventory(available_sids):
         print('Inventory...', end = ' ', flush = True)
         for pid in range(num_products-1):
             if pid % 100 == 0:
-                print(f'{pid}', end=' ', flush = True)
+                print(f'{pid}', end =' ', flush = True)
             invNum = fake.random_int(0, 1000)
             sid = fake.random_element(elements=available_sids)
             pid = fake.unique.random_int(0, (num_products-1))
@@ -114,9 +114,26 @@ def gen_inventory(available_sids):
     fake.unique.clear()
     return
 
+def gen_line_item(available_sids, available_pids):
+    with open('Line_item.csv', 'w') as li:
+        writer = get_csv_writer(li)
+        print('Line_item...', end = ' ', flush = True)
+        for uid in range(num_users):
+            num_uniitems = fake.random_int(0,100)
+            for item in range(num_uniitems):
+                if uid % 100 == 0:
+                    print(f'{uid}', end=' ', flush=True)
+                sid = fake.random_element(elements=available_sids)
+                pid = fake.random_element(elements=available_pids)
+                num_item = fake.random_int(0, 1000)
+                writer.writerow([uid, pid, sid, num_item])
+        print(f'{num_uniitems} generated')
+    return
+
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_purchases(num_purchases, available_pids)
 available_sids = gen_sellers()
 gen_product_review()
 gen_inventory(available_sids)
+gen_line_item(available_sids, available_pids)
