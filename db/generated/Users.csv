@@ -98,3 +98,4 @@
 "97","kennethwilliams@gmail.com","pbkdf2:sha256:50000$dbZzqoEX$edbf053c95ff0ce9cda5f05b92ea2c0b0fb9745191ae462b844f45be0f97a67a","Donald","Thompson"
 "98","shawnharris@gmail.com","pbkdf2:sha256:50000$y8vT2co2$8a9247dcf4395a8ea2c2c6240fb77d106cba087c5cfadb343f5237cc4814e299","Bryan","Scott"
 "99","danieltucker@hotmail.com","pbkdf2:sha256:50000$rDXAA1lS$a4ae9e638ef4d004652697d007cdaac105bac8ea4bd74bf5fa551e7d74771d7a","Jessica","Miller"
+"100","johnsmith@email.com", "pbkdf2:sha256:260000$Lp0Q1hKow54n6ej2$9a95a070d9820b79ede093bc5027b04c0d0499be38b88b991abaef8a28c4c180", "John","Smith"

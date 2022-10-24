@@ -13,6 +13,7 @@ fake = Faker()
 def get_csv_writer(f):
     return csv.writer(f, dialect='unix')
 
+print(generate_password_hash("hello"))
 
 def gen_users(num_users):
     with open('Users.csv', 'w') as f:
