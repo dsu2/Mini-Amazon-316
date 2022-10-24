@@ -38,7 +38,6 @@ ORDER BY time_purchased DESC
 SELECT id, uid, pid, time_purchased
 FROM Purchases
 WHERE uid = :uid
-ORDER BY time_purchased DESC
 ''',
                               uid=uid)
         return [Purchase(*row) for row in rows]
