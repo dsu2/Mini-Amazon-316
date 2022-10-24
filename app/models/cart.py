@@ -33,7 +33,7 @@ ORDER BY time_added_to_cart DESC
         return [Cart(*row) for row in rows]
 
     @staticmethod
-    def get_Cart(uid):
+    def get_cart(uid):
         rows = app.db.execute('''
 SELECT Products, num_item
 FROM Line-item
