@@ -3,6 +3,17 @@
 {% block content %}
 
 <br><br>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.k.label }}
+    {{ form.k(type="number", min="1", max="300") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
@@ -23,6 +34,43 @@
     {% endfor %}
   </tbody>
 </table>
+
+<br><br>
+<form action="" method="post">
+  {{ cform.hidden_tag() }}
+  <p>
+    {{ cform.uid.label }}
+    {{ cform.uid(type="number", min="1", max="300") }}
+    {{ cform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>Item in User Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in item_in_cart%}
+      <tr>
+        <th scope="row">{{item.uid}}</th>
+        <td>{{item.pid}}</td>
+        <td>{{item.sid}}</td>
+        <td>{{item.num_item}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 
 <br><br>
 {% if current_user.is_authenticated %}
