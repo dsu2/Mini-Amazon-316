@@ -21,3 +21,4 @@ SELECT pg_catalog.setval('public.sellers_id_seq',
                          false);
 \COPY Inventory FROM '/home/vcm/Mini-Amazon-316/db/generated/Inventory.csv' WITH DELIMITER ',' NULL '' CSV
 
+\COPY Line-item FROM '/home/vcm/Mini-Amazon-316/db/generated/Line_item.csv' WITH DELIMITER ',' NULL '' CSV
