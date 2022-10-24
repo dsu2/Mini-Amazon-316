@@ -156,6 +156,23 @@ def gen_seller_review():
             print(f'{numreviews} generated')
     return   
 
+def gen_line_item(available_sids, available_pids):
+    with open('Line_item.csv', 'w') as li:
+        writer = get_csv_writer(li)
+        print('Line_item...', end = ' ', flush = True)
+        for uid in range(num_users):
+            num_uniitems = fake.random_int(0,99)
+            for item in range(num_uniitems):
+                if uid % 100 == 0:
+                    print(f'{uid}', end=' ', flush=True)
+                sid = fake.random_element(elements=available_sids)
+                pid = fake.random_element(elements=available_pids)
+                num_item = fake.random_int(0, 1000)
+                writer.writerow([uid, pid, sid, num_item])
+        print(f'{num_uniitems} generated')
+    return
+    
+
 gen_users(num_users)
 available_pids = gen_products(num_products)
 available_sids = gen_sellers()
@@ -163,3 +180,4 @@ prod_dict = gen_inventory(available_sids)
 gen_purchases(num_purchases, available_pids, prod_dict)
 gen_product_review()
 gen_seller_review()
+gen_line_item(available_sids, available_pids)

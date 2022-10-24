@@ -55,3 +55,11 @@ CREATE TABLE SellerReviews (
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     PRIMARY KEY (sid, uid)
 );
+
+CREATE TABLE Line_item (
+    uid INT NOT NULL REFERENCES Users(id),
+    pid INT NOT NULL REFERENCES Products(id),
+    sid INT NOT NULL REFERENCES Sellers(id),
+    num_item INT,
+    PRIMARY KEY (uid, pid, sid)
+);
