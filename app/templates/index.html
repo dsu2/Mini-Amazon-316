@@ -3,6 +3,17 @@
 {% block content %}
 
 <br><br>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.k.label }}
+    {{ form.k(type="number", min="1", max="300") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
@@ -19,6 +30,42 @@
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+<form action="" method="post">
+  {{ rform.hidden_tag() }}
+  <p>
+    {{ rform.uid.label }}
+    {{ rform.uid(type="number", min="1", max="10000") }}
+    {{ rform.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
+
+<h2>Reviews:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in recent_reviews%}
+      <tr>
+        <th scope="row">{{review.pid}}</th>
+        <td>{{review.uid}}</td>
+        <td>{{review.time_purchased}}</td>
+        <td>{{review.text}}</td>
       </tr>
     {% endfor %}
   </tbody>

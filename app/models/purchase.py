@@ -26,6 +26,7 @@ FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
 ORDER BY time_purchased DESC
+LIMIT 50
 ''',
                               uid=uid,
                               since=since)

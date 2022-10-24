@@ -24,8 +24,22 @@ WHERE id = :id
 SELECT id, name, price, available
 FROM Products
 WHERE available = :available
+LIMIT 50
 ''',
                               available=available)
+        return [Product(*row) for row in rows]
+
+    @staticmethod
+    def get_expensive_k(available, k):
+        rows = app.db.execute('''
+SELECT id, name, price, available
+FROM Products
+WHERE available = :available
+ORDER BY price DESC
+LIMIT :k
+''',
+                              available=available, 
+                              k=k)
         return [Product(*row) for row in rows]
 
    
