@@ -6,10 +6,10 @@ class Inventory:
     This is just a TEMPLATE for Inventory, you should change this by adding or 
         replacing new columns, etc. for your design.
     """
-    def __init__(self, uid, pid, count):
-        self.uid = uid
+    def __init__(self, sid, pid, invNum):
+        self.sid = sid
         self.pid = pid
-        self.count = count
+        self.invNum = invNum
 
     @staticmethod
     def get_by_pid(id):
@@ -22,7 +22,7 @@ WHERE pid = :pid
         return Inventory(*(rows[0])) if rows else None
 
     @staticmethod
-    def get_by_uid(sid):
+    def get_by_sid(sid):
         rows = app.db.execute('''
 SELECT sid, pid, invNum
 FROM Inventory

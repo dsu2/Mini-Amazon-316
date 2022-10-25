@@ -25,3 +25,5 @@ SELECT pg_catalog.setval('public.purchases_id_seq',
 \COPY ProductReviews FROM '/home/vcm/Mini-Amazon-316/db/generated/ProductReviews.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY SellerReviews FROM '/home/vcm/Mini-Amazon-316/db/generated/SellerReviews.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY Line_item FROM '/home/vcm/Mini-Amazon-316/db/generated/Line_item.csv' WITH DELIMITER ',' NULL '' CSV

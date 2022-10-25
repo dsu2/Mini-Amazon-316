@@ -32,7 +32,7 @@ CREATE TABLE Purchases (
 CREATE TABLE Inventory (
     sid INT NOT NULL REFERENCES Sellers(id),
     pid INT NOT NULL REFERENCES Products(id),
-    invNum INT,
+    invNum INT NOT NULL,
     PRIMARY KEY (sid,pid)
 );
 
@@ -60,6 +60,6 @@ CREATE TABLE Line_item (
     uid INT NOT NULL REFERENCES Users(id),
     pid INT NOT NULL REFERENCES Products(id),
     sid INT NOT NULL REFERENCES Sellers(id),
-    num_item INT,
+    num_item INT NOT NULL,
     PRIMARY KEY (uid, pid, sid)
 );

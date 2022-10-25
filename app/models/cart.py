@@ -4,9 +4,9 @@ from flask import current_app as app
 class Cart:
 
     def __init__(self, uid, pid, sid, num_item):
-        self.sid = sid
         self.uid = uid
         self.pid = pid
+        self.sid = sid
         self.num_item = num_item
 
     @staticmethod
@@ -47,5 +47,6 @@ WHERE uid = :uid
         rows = app.db.execute('''
 SELECT uid, pid, sid, num_item
 FROM Line_item
+LIMIT 50
 ''')
         return [Cart(*row) for row in rows]

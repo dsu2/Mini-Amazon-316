@@ -16,7 +16,7 @@ from flask import Blueprint
 bp = Blueprint('index', __name__)
 
 class ExpensiveForm(FlaskForm):
-    k = IntegerField('priciest', validators=[DataRequired(), NumberRange(min=1, max =300)])
+    k = IntegerField('Priciest number', validators=[DataRequired(), NumberRange(min=1, max =300)])
     submit = SubmitField('sort')
 
 class ReviewForm(FlaskForm):
@@ -28,7 +28,11 @@ class CartForm(FlaskForm):
     submit = SubmitField('sort')
 
 class InvForm(FlaskForm):
-    sid = IntegerField('User/Seller ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
+    sid = IntegerField('User/Seller ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
+    submit = SubmitField('sort')
+
+class PurForm(FlaskForm):
+    uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
     submit = SubmitField('sort')
 
 @bp.route('/', methods=['GET', 'POST'])
@@ -54,9 +58,15 @@ def index():
 
     iform = InvForm()
     if iform.validate_on_submit():
-        inv = Inventory.get_by_uid(iform.sid.data)
+        inv = Inventory.get_by_sid(iform.sid.data)
     else:
         inv = Inventory.get_all()
+    
+    pform = PurForm()
+    if pform.validate_on_submit():
+        purch = Purchase.get_by_uid(pform.uid.data)
+    else:
+        purch = Purchase.get_all()
 
     # find the products current user has bought:
     if current_user.is_authenticated:
@@ -69,7 +79,7 @@ def index():
                            avail_products=products,
                            purchase_history=purchases,
                            recent_reviews = reviews,
-                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
+                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
 
 
 #reviews part now?
