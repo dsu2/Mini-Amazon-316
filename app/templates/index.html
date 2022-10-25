@@ -72,6 +72,76 @@
 </table>
 
 <br><br>
+<form action="" method="post">
+  {{ iform.hidden_tag() }}
+  <p>
+    {{ iform.sid.label }}
+    {{ iform.sid(type="number", min="1", max="10000") }}
+    {{ iform.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
+
+<h2>Inventory:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User/Seller ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Num Items</th>     
+    </tr>
+  </thead>
+  <tbody>
+    {% for inv in user_inventory%}
+      <tr>
+        <th scope="row">{{inv.sid}}</th>
+        <td>{{inv.pid}}</td>
+        <td>{{inv.invNum}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<br><br>
+<form action="" method="post">
+  {{ cform.hidden_tag() }}
+  <p>
+    {{ cform.uid.label }}
+    {{ cform.uid(type="number", min="1", max="10000") }}
+    {{ cform.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
+
+<h2>Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Amount of Item</th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for cart in user_cart%}
+      <tr>
+        <th scope="row">{{cart.uid}}</th>
+        <td>{{cart.pid}}</td>
+        <td>{{cart.sid}}</td>
+        <td>{{cart.num_item}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
 {% if current_user.is_authenticated %}
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>

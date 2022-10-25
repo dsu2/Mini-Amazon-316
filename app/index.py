@@ -9,6 +9,8 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Nu
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.reviews import ProductReview
+from .models.cart import Cart
+from .models.inventory import Inventory
 
 from flask import Blueprint
 bp = Blueprint('index', __name__)
@@ -21,6 +23,14 @@ class ReviewForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
     submit = SubmitField('sort')
 
+class CartForm(FlaskForm):
+    uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
+    submit = SubmitField('sort')
+
+class InvForm(FlaskForm):
+    sid = IntegerField('User/Seller ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
+    submit = SubmitField('sort')
+
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # get all available products for sale:
@@ -29,11 +39,25 @@ def index():
         products = Product.get_expensive_k(True,form.k.data)
     else:
         products = Product.get_all(True)
+        
     rform = ReviewForm()
     if rform.validate_on_submit():
         reviews = ProductReview.get_5_recent_uid(rform.uid.data)
     else:
         reviews = ProductReview.get_all()
+
+    cform = CartForm()
+    if cform.validate_on_submit():
+        cart = Cart.get_cart(cform.uid.data)
+    else:
+        cart = Cart.get_all()
+
+    iform = InvForm()
+    if iform.validate_on_submit():
+        inv = Inventory.get_by_uid(iform.sid.data)
+    else:
+        inv = Inventory.get_all()
+
     # find the products current user has bought:
     if current_user.is_authenticated:
         purchases = Purchase.get_all_by_uid_since(
@@ -45,7 +69,7 @@ def index():
                            avail_products=products,
                            purchase_history=purchases,
                            recent_reviews = reviews,
-                           form=form, rform = rform)
+                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
 
 
 #reviews part now?
