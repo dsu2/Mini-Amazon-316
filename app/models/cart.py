@@ -3,11 +3,11 @@ from flask import current_app as app
 
 class Cart:
 
-    def __init__(self, id, uid, pid, time_added_to_cart):
-        self.id = id
+    def __init__(self, uid, pid, sid, num_item):
         self.uid = uid
         self.pid = pid
-        self.time_added_to_cart = time_added_to_cart
+        self.sid = sid
+        self.num_item = num_item
 
     @staticmethod
     def get(id):
@@ -35,9 +35,18 @@ ORDER BY time_added_to_cart DESC
     @staticmethod
     def get_cart(uid):
         rows = app.db.execute('''
-SELECT Products, sid, num_item
-FROM Line-item
+SELECT uid, pid, sid, num_item
+FROM Line_item
 WHERE uid = :uid
 ''',
                               uid=uid)
+        return [Cart(*row) for row in rows]
+
+    @staticmethod
+    def get_all():
+        rows = app.db.execute('''
+SELECT uid, pid, sid, num_item
+FROM Line_item
+LIMIT 50
+''')
         return [Cart(*row) for row in rows]

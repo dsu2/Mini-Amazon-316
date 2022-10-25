@@ -158,6 +158,7 @@ def gen_seller_review():
 
 def gen_line_item(available_sids, available_pids):
     with open('Line_item.csv', 'w') as li:
+        used = set()
         writer = get_csv_writer(li)
         print('Line_item...', end = ' ', flush = True)
         for uid in range(num_users):
@@ -168,7 +169,11 @@ def gen_line_item(available_sids, available_pids):
                 sid = fake.random_element(elements=available_sids)
                 pid = fake.random_element(elements=available_pids)
                 num_item = fake.random_int(0, 1000)
-                writer.writerow([uid, pid, sid, num_item])
+                if (str(uid) + " " + str(pid) + " " + str(sid)) in used:
+                    continue
+                else:
+                    used.add((str(uid) + " " + str(pid) + " " + str(sid)))
+                    writer.writerow([uid, pid, sid, num_item])
         print(f'{num_uniitems} generated')
     return
     
