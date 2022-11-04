@@ -24,6 +24,7 @@ WHERE id = :id
 SELECT id, name, price, available
 FROM Products
 WHERE available = :available
+LIMIT 50
 ''',
                               available=available)
         return [Product(*row) for row in rows]

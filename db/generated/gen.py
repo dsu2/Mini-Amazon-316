@@ -1,6 +1,7 @@
 from werkzeug.security import generate_password_hash
 import csv
 from faker import Faker
+from datetime import datetime
 
 num_users = 100
 num_products = 2000
@@ -50,21 +51,6 @@ def gen_products(num_products):
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
-
-def gen_purchases(num_purchases, available_pids):
-    with open('Purchases.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print('Purchases...', end=' ', flush=True)
-        for id in range(num_purchases):
-            if id % 100 == 0:
-                print(f'{id}', end=' ', flush=True)
-            uid = fake.random_int(min=0, max=num_users-1)
-            pid = fake.random_element(elements=available_pids)
-            time_purchased = fake.date_time()
-            writer.writerow([id, uid, pid, time_purchased])
-        print(f'{num_purchases} generated')
-    return
-
 num_sellers = 50
 def gen_sellers():
     available_sids = []
@@ -74,17 +60,19 @@ def gen_sellers():
         for sid in range(num_sellers):
             if sid % 10 == 0:
                 print(f'{sid}', end=' ', flush=True)
-            uid = fake.unique.random_int(0, 100)
+            uid = fake.unique.random_int(0, 99)
             writer.writerow([sid, uid])
             available_sids.append(sid)
         print(f'{num_sellers} generated')
     fake.unique.clear()
     return available_sids 
 
-numreviews = 1000
+
 def gen_product_review():
     with open('ProductReviews.csv', 'w') as f:
         with open('Purchases.csv', "r") as purchases:
+            hasPidUid = set()
+            numreviews = 0
             writer = get_csv_writer(f)
             reader = csv.reader(purchases, dialect = 'unix')
             print('Product Reviews...', end = ' ', flush = True)
@@ -92,14 +80,21 @@ def gen_product_review():
                 if(int(i[0]) %5 == 0):
                     pid = i[2]
                     uid = i[1]
-                    text = fake.sentence(nb_words=100)[:-1]
-                    pos = fake.pyint(0, 50)
-                    neg = fake.pyint(0, 50)
-                    writer.writerow([pid, uid, text, pos, neg])
+                    if(pid + " " + uid) in hasPidUid:
+                        continue
+                    else:
+                        hasPidUid.add(pid + " " + uid)
+                        text = fake.sentence(nb_words=100)[:-1]
+                        pos = fake.pyint(0, 50)
+                        neg = fake.pyint(0, 50)
+                        time_purchased = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
+                        writer.writerow([pid, uid, text, pos, neg, time_purchased])
+                        numreviews += 1
             print(f'{numreviews} generated')
     return
 
 def gen_inventory(available_sids):
+    proddict = {}
     with open('Inventory.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end = ' ', flush = True)
@@ -110,13 +105,84 @@ def gen_inventory(available_sids):
             sid = fake.random_element(elements=available_sids)
             pid = fake.unique.random_int(0, (num_products-1))
             writer.writerow([sid, pid, invNum])
+            if pid in proddict:
+                proddict[pid] = proddict[pid].append(sid)
+            else:
+                proddict[pid] = [sid]
         print(f'{num_products} generated')
     fake.unique.clear()
+    return proddict
+
+def gen_purchases(num_purchases, available_pids, prod_dict):
+    with open('Purchases.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print('Purchases...', end=' ', flush=True)
+        for id in range(num_purchases):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            pid = fake.random_element(elements=available_pids)
+            if pid in prod_dict:
+                uid = fake.random_int(min=0, max=num_users-1)
+                sid = fake.random_element(elements = prod_dict[pid])
+                time_purchased = fake.date_time()
+                writer.writerow([id, uid, pid, time_purchased, sid])
+            else:
+                continue
+        print(f'{num_purchases} generated')
     return
+
+def gen_seller_review():
+    with open('SellerReviews.csv', 'w') as f:
+        with open('Purchases.csv', "r") as purchases:
+            numreviews = 0
+            writer = get_csv_writer(f)
+            reader = csv.reader(purchases, dialect = 'unix')
+            print('Seller Reviews...', end = ' ', flush = True)
+            usedPidSid = set()
+            for i in reader:
+                if(int(i[0]) %5 == 0):
+                    sid = i[4]
+                    uid = i[1]
+                    if (uid + " " + sid) in usedPidSid:
+                        continue
+                    else:
+                        usedPidSid.add(uid + " " + sid)
+                        text = fake.sentence(nb_words=100)[:-1]
+                        pos = fake.pyint(0, 50)
+                        neg = fake.pyint(0, 50)
+                        time_purchased = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
+                        writer.writerow([sid, uid, text, pos, neg, time_purchased])
+                        numreviews += 1
+            print(f'{numreviews} generated')
+    return   
+
+def gen_line_item(available_sids, available_pids):
+    with open('Line_item.csv', 'w') as li:
+        used = set()
+        writer = get_csv_writer(li)
+        print('Line_item...', end = ' ', flush = True)
+        for uid in range(num_users):
+            num_uniitems = fake.random_int(0,99)
+            for item in range(num_uniitems):
+                if uid % 100 == 0:
+                    print(f'{uid}', end=' ', flush=True)
+                sid = fake.random_element(elements=available_sids)
+                pid = fake.random_element(elements=available_pids)
+                num_item = fake.random_int(0, 1000)
+                if (str(uid) + " " + str(pid) + " " + str(sid)) in used:
+                    continue
+                else:
+                    used.add((str(uid) + " " + str(pid) + " " + str(sid)))
+                    writer.writerow([uid, pid, sid, num_item])
+        print(f'{num_uniitems} generated')
+    return
+    
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
-gen_purchases(num_purchases, available_pids)
 available_sids = gen_sellers()
+prod_dict = gen_inventory(available_sids)
+gen_purchases(num_purchases, available_pids, prod_dict)
 gen_product_review()
-gen_inventory(available_sids)
+gen_seller_review()
+gen_line_item(available_sids, available_pids)
