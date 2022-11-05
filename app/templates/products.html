@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    position: sticky;
+    top:0;
+  }
+  li {
+    float: left;
+  }
+  li a {
+    display: inline-block;
+    color: aliceblue;
+    text-align: left;
+    padding: 14px 16px;
+  }
+  li a:hover {
+    background-color: #1ccf00;
+  }
+  .active {
+    background-color: #118100;
+  }
+</style>
+
+<nav class = "navbar">
+  <ul>
+    <li><a href="{{url_for('index.index')}}">Home</a></li>
+    <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
+  </ul>
+</nav>
+
+<br><br>
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.k.label }}
+    {{ form.k(type="number", min="1", max="300") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+
+</form> 
+
+<br>
+
+<h2>Products for sale:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
+      <th scope="col">Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for product in avail_products%}
+      <tr>
+        <th scope="row">{{product.id}}</th>
+        <td>{{product.name}}</td>
+        <td>{{product.price}}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+
+
+{% endblock %}
