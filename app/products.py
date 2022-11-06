@@ -31,3 +31,8 @@ def shelf():
     return render_template('products.html',
                            avail_products=products,
                            form=form)
+
+@bp.route('/<int:productid>/')
+def productDetails(productid=None):
+    products = Product.get(id=productid)
+    return render_template('product_detailed.html', avail_products = products)

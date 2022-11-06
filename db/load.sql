@@ -9,6 +9,7 @@ SELECT pg_catalog.setval('public.users_id_seq',
 SELECT pg_catalog.setval('public.products_id_seq',
                          (SELECT MAX(id)+1 FROM Products),
                          false);
+\COPY ProductDetails FROM '/home/vcm/Mini-Amazon-316/db/generated/ProductDetailed.csv' WITH DELIMITER ',' NULL '' CSV
 
 \COPY Sellers FROM '/home/vcm/Mini-Amazon-316/db/generated/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.sellers_id_seq',

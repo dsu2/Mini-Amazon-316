@@ -51,9 +51,22 @@ def gen_products(num_products):
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
+def gen_product_details(num_products):
+    with open('ProductDetailed.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print ('product details...', end=' ', flush=True)
+        for pid in range(num_products):
+            if pid % 100 == 0:
+                print(f'{pid}', end=' ', flush=True)
+            des = fake.sentence(nb_words=100)[:-1]
+            image = fake.image_url(width=200, height=200, placeholder_url='https://picsum.photos/{width}/{height}') 
+            writer.writerow([pid, des, image])
+        print(f'{num_products} product details generated')
+    return
+
 num_sellers = 50
 def gen_sellers():
-    available_sids = []
+    sids = []
     with open('Sellers.csv', 'w') as f:    
         writer = get_csv_writer(f)
         print('Sellers...', end= ' ', flush = True)
@@ -62,10 +75,10 @@ def gen_sellers():
                 print(f'{sid}', end=' ', flush=True)
             uid = fake.unique.random_int(0, 99)
             writer.writerow([sid, uid])
-            available_sids.append(sid)
+            sids.append(sid)
         print(f'{num_sellers} generated')
     fake.unique.clear()
-    return available_sids 
+    return sids 
 
 
 def gen_product_review():
@@ -93,23 +106,23 @@ def gen_product_review():
             print(f'{numreviews} generated')
     return
 
-def gen_inventory(available_sids):
+def gen_inventory(available_sids, available_pids):
     proddict = {}
     with open('Inventory.csv', 'w') as f:
         writer = get_csv_writer(f)
         print('Inventory...', end = ' ', flush = True)
-        for pid in range(num_products-1):
-            if pid % 100 == 0:
-                print(f'{pid}', end=' ', flush = True)
+        for i in range(len(available_pids)):
+            if i % 100 == 0:
+                print(f'{i}', end=' ', flush = True)
             invNum = fake.random_int(0, 1000)
             sid = fake.random_element(elements=available_sids)
-            pid = fake.unique.random_int(0, (num_products-1))
+            pid = available_pids[i]
             writer.writerow([sid, pid, invNum])
             if pid in proddict:
                 proddict[pid] = proddict[pid].append(sid)
             else:
                 proddict[pid] = [sid]
-        print(f'{num_products} generated')
+        print(f'{len(available_pids)} generated')
     fake.unique.clear()
     return proddict
 
@@ -180,9 +193,10 @@ def gen_line_item(available_sids, available_pids):
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
-available_sids = gen_sellers()
-prod_dict = gen_inventory(available_sids)
+gen_product_details(num_products)
+sids = gen_sellers()
+prod_dict = gen_inventory(sids, available_pids)
 gen_purchases(num_purchases, available_pids, prod_dict)
 gen_product_review()
 gen_seller_review()
-gen_line_item(available_sids, available_pids)
+gen_line_item(sids, available_pids)

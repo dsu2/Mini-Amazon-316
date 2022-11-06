@@ -25,6 +25,7 @@
   .active {
     background-color: #118100;
   }
+
 </style>
 
 <nav class = "navbar">
@@ -54,6 +55,7 @@
       <th scope="col">Product ID</th>
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
+      <th scope="col"> </th>
     </tr>
   </thead>
   <tbody>
@@ -62,6 +64,9 @@
         <th scope="row">{{product.id}}</th>
         <td>{{product.name}}</td>
         <td>{{product.price}}</td>
+        <td>  
+          <a href= "{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Details</a>                
+        </td>
       </tr>
     {% endfor %}
   </tbody>
