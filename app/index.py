@@ -82,6 +82,7 @@ def index():
                            form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
 
 
+
 #reviews part now?
 
 """
