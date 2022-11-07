@@ -9,7 +9,7 @@ num_purchases = 2500
 
 Faker.seed(0)
 fake = Faker()
-
+categories = ['Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf']
 
 def get_csv_writer(f):
     return csv.writer(f, dialect='unix')
@@ -44,10 +44,11 @@ def gen_products(num_products):
                 print(f'{pid}', end=' ', flush=True)
             name = fake.sentence(nb_words=4)[:-1]
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
+            category = fake.random_element(categories)
             available = fake.random_element(elements=('true', 'false'))
             if available == 'true':
                 available_pids.append(pid)
-            writer.writerow([pid, name, price, available])
+            writer.writerow([pid, name, price, category, available])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
 
