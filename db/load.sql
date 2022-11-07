@@ -9,14 +9,24 @@ SELECT pg_catalog.setval('public.users_id_seq',
 SELECT pg_catalog.setval('public.products_id_seq',
                          (SELECT MAX(id)+1 FROM Products),
                          false);
+\COPY ProductDetails FROM '/home/eye2/Mini-Amazon-316/db/generated/ProductDetailed.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.sellers_id_seq',
+                         (SELECT MAX(pid)+1 FROM ProductDetails),
+                         false);
+\COPY Sellers FROM '/home/eye2/Mini-Amazon-316/db/generated/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.sellers_id_seq',
+                         (SELECT MAX(id)+1 FROM Sellers),
+                         false);
 
 \COPY Purchases FROM '/home/eye2/Mini-Amazon-316/db/generated/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
 SELECT pg_catalog.setval('public.purchases_id_seq',
                          (SELECT MAX(id)+1 FROM Purchases),
                          false);
-
-\COPY Sellers FROM '/home/eye2/Mini-Amazon-316/db/generated/Sellers.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.sellers_id_seq',
-                         (SELECT MAX(id)+1 FROM Sellers),
-                         false);
+                         
 \COPY Inventory FROM '/home/eye2/Mini-Amazon-316/db/generated/Inventory.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY ProductReviews FROM '/home/eye2/Mini-Amazon-316/db/generated/ProductReviews.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY SellerReviews FROM '/home/eye2/Mini-Amazon-316/db/generated/SellerReviews.csv' WITH DELIMITER ',' NULL '' CSV
+
+\COPY Line_item FROM '/home/eye2/Mini-Amazon-316/db/generated/Line_item.csv' WITH DELIMITER ',' NULL '' CSV

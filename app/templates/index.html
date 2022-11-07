@@ -1,35 +1,182 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    position: sticky;
+    top: 0;
+  }
+
+  li {
+    float: left;
+  }
+
+  li a {
+    display: inline-block;
+    color: aliceblue;
+    text-align: left;
+    padding: 14px 16px;
+  }
+
+  li a:hover {
+    background-color: #1ccf00;
+  }
+
+  .active {
+    background-color: #118100;
+  }
+</style>
+
+<nav class="navbar">
+  <ul>
+    <li><a class="active" href="{{url_for('index.index')}}">Home</a></li>
+    <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
+  </ul>
+</nav>
 
 <br><br>
 
 <form action="" method="post">
-  {{ form.hidden_tag() }}
+  {{ rform.hidden_tag() }}
   <p>
-    {{ form.k.label }}
-    {{ form.k(type="number") }}
-    {{ form.submit(class_="btn btn-black") }}
+    {{ rform.uid.label }}
+    {{ rform.uid(type="number", min="1", max="10000") }}
+    {{ rform.submit(class_="btn btn-black") }}
   </p>
 </form>
 
 <br>
 
-<h2>Products for sale:</h2>
+<h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
+      <th scope="col">User ID</th>
       <th scope="col">Product ID</th>
-      <th scope="col">Product Name</th>
-      <th scope="col">Price</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+
     </tr>
   </thead>
   <tbody>
-    {% for product in avail_products%}
+    {% for review in recent_reviews%}
     <tr>
-      <th scope="row">{{product.id}}</th>
-      <td>{{product.name}}</td>
-      <td>{{product.price}}</td>
+      <th scope="row">{{review.pid}}</th>
+      <td>{{review.uid}}</td>
+      <td>{{review.time_purchased}}</td>
+      <td>{{review.text}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+<form action="" method="post">
+  {{ iform.hidden_tag() }}
+  <p>
+    {{ iform.sid.label }}
+    {{ iform.sid(type="number", min="1", max="10000") }}
+    {{ iform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>Inventory:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User/Seller ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Num Items</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for inv in user_inventory%}
+    <tr>
+      <th scope="row">{{inv.sid}}</th>
+      <td>{{inv.pid}}</td>
+      <td>{{inv.invNum}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<br><br>
+<form action="" method="post">
+  {{ cform.hidden_tag() }}
+  <p>
+    {{ cform.uid.label }}
+    {{ cform.uid(type="number", min="0", max="10000") }}
+    {{ cform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Amount of Item</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for cart in user_cart%}
+    <tr>
+      <th scope="row">{{cart.uid}}</th>
+      <td>{{cart.pid}}</td>
+      <td>{{cart.sid}}</td>
+      <td>{{cart.num_item}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<br><br>
+<form action="" method="post">
+  {{ pform.hidden_tag() }}
+  <p>
+    {{ pform.uid.label }}
+    {{ pform.uid(type="number", min="0", max="10000") }}
+    {{ pform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>User Purchases:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Timestamp</th>
+      <th scope="col">Seller ID</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in user_purchases%}
+    <tr>
+      <th scope="row">{{p.id}}</th>
+      <td>{{p.uid}}</td>
+      <td>{{p.pid}}</td>
+      <td>{{p.time_purchased}}</td>
+      <td>{{p.sid}}</td>
     </tr>
     {% endfor %}
   </tbody>
