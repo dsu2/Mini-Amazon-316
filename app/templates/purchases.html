@@ -1,21 +1,84 @@
 {% extends "base.html" %}
 
 {% block content %}
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        background-color: #242424;
+        position: sticky;
+        top: 0;
+    }
 
+    li {
+        float: left;
+    }
+
+    li a {
+        display: inline-block;
+        color: aliceblue;
+        text-align: left;
+        padding: 14px 16px;
+    }
+
+    li a:hover {
+        background-color: #1ccf00;
+    }
+
+    .active {
+        background-color: #118100;
+    }
+</style>
+<br>
+<nav class="navbar">
+    <ul>
+        <li><a href="{{url_for('index.index')}}">Home</a></li>
+        <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
+        <li><a class="active" href="{{ url_for('purchases.purchases') }}">Purchases</a></li>
+    </ul>
+</nav>
 <br><br>
+<form action="" method="post">
+    {{ pform.hidden_tag() }}
+    <p>
+        {{ pform.uid.label }}
+        {{ pform.uid(type="number", min="0", max="10000") }}
+        {{ pform.submit(class_="btn btn-black") }}
+    </p>
+
+</form>
 
 <br>
 
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <p>
-        {{ form.k.label }}
-        {{ form.k(type="number") }}
-        {{ form.submit(class_="btn btn-black") }}
-    </p>
-</form>
+<h2>User Purchases:</h2>
+<table class='table table-hover table-bordered container'>
+    <thead class="thead-dark">
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">User ID</th>
+            <th scope="col">Product ID</th>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Seller ID</th>
 
-{% if current_user.is_authenticated and form.validate_on_submit() %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for p in user_purchases%}
+        <tr>
+            <th scope="row">{{p.id}}</th>
+            <td>{{p.uid}}</td>
+            <td>{{p.pid}}</td>
+            <td>{{p.time_purchased}}</td>
+            <td>{{p.sid}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br><br>
+
+{% if current_user.is_authenticated and form.validate_on_submit()%}
 <h2>Your recent purchases:</h2>
 <table class='table table-hover table-bordered container'>
     <thead class="thead-dark">
@@ -35,6 +98,8 @@
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
 {% endif %}
 
 {% endblock %}

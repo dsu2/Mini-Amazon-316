@@ -31,10 +31,11 @@ class CartForm(FlaskForm):
 class InvForm(FlaskForm):
     sid = IntegerField('User/Seller ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
     submit = SubmitField('sort')
-
+"""
 class PurForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
     submit = SubmitField('sort')
+"""
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
@@ -62,7 +63,7 @@ def index():
         inv = Inventory.get_by_sid(iform.sid.data)
     else:
         inv = Inventory.get_all()
-    
+    """
     pform = PurForm()
     if pform.validate_on_submit():
         purch = Purchase.get_by_uid(pform.uid.data)
@@ -74,13 +75,14 @@ def index():
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
     else:
-        purchases = None
+        purchases = None 
+    """
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            avail_products=products,
-                           purchase_history=purchases,
+                           #purchase_history=purchases,
                            recent_reviews = reviews,
-                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
+                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
 
 
 
