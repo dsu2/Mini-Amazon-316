@@ -51,8 +51,11 @@
   </p>
 </div>
 
+
+
 <form action="" method="post">
   {{ form.hidden_tag() }}
+  <br><br>
   <p>
     {{ form.text.label }}
     {{ form.text(type = "string") }}
@@ -61,8 +64,9 @@
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
+
 <h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
-<br><br>
+
 <h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">

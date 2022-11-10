@@ -46,6 +46,15 @@
 </form> 
 
 <form action="" method="post">
+  {{form.hidden_tag()}}
+  <p>
+    {{searchForm.search.label}}
+    {{searchForm.search(type="string")}}
+    {{searchForm.submit(class_="btn btn-black")}}
+  </p>
+</form>
+
+<form action="" method="post">
   {{ categoryForm.hidden_tag() }}
   <p>
     {{ categoryForm.category.label }}

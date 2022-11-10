@@ -5,7 +5,7 @@ import datetime
 import sys
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, AnyOf
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, AnyOf, Length
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -24,6 +24,10 @@ class ExpensiveForm(FlaskForm):
 class CategoryForm(FlaskForm):
     category = SelectField('Category', validators=[DataRequired()], choices=['Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf'])
     submit = SubmitField('Go')
+
+class SearchForm(FlaskForm):
+    search = StringField('Search products by name', validators=[DataRequired(), Length(min=1, max=150)])
+    submit = SubmitField('Search')
 
 class ReviewForm(FlaskForm):
     text = StringField('Text for review', validators = [DataRequired()])
@@ -51,11 +55,16 @@ def shelf():
     categoryForm = CategoryForm()
     if categoryForm.validate_on_submit():
         products = Product.get_category(True, categoryForm.category.data)
+
+    searchForm = SearchForm()
+    if searchForm.validate_on_submit():
+        products = Product.get_search(True, searchForm.search.data)
     
     return render_template('products.html',
                            avail_products=products,
                            form=form, 
-                           categoryForm=categoryForm)
+                           categoryForm=categoryForm,
+                           searchForm=searchForm)
 
 @bp.route('/shelf/high2low', methods=['GET', 'POST'])
 def high2low():
@@ -72,11 +81,16 @@ def high2low():
     categoryForm = CategoryForm()
     if categoryForm.validate_on_submit():
         products = Product.get_category(True, categoryForm.category.data)
+
+    searchForm = SearchForm()
+    if searchForm.validate_on_submit():
+        products = Product.get_search(True, searchForm.search.data)
     
     return render_template('products.html',
                            avail_products=products,
                            form=form, 
-                           categoryForm=categoryForm)
+                           categoryForm=categoryForm,
+                           searchForm=searchForm)
 
 @bp.route('/shelf/low2high', methods=['GET', 'POST'])
 def low2high():
@@ -94,17 +108,22 @@ def low2high():
     if categoryForm.validate_on_submit():
         products = Product.get_category(True, categoryForm.category.data)
 
+    searchForm = SearchForm()
+    if searchForm.validate_on_submit():
+        products = Product.get_search(True, searchForm.search.data)
+
     
     return render_template('products.html',
                            avail_products=products,
                            form=form, 
-                           categoryForm=categoryForm)
+                           categoryForm=categoryForm,
+                           searchForm=searchForm)
 
 @bp.route('/pid/<int:productid>/', methods=['GET', 'POST'])
 def productDetails(productid=None):
 
     sellers = Inventory.get_by_pid(id=productid)
-    product = Product.get(id=productid)
+    product = ProductDetails.get_details(id=productid)
     reviews = ProductReview.get_all_by_pid(productid)
     avgreview = ProductReview.findAvgRating(pid=productid)
     numreview = ProductReview.findNumReview(pid=productid)
@@ -128,7 +147,7 @@ def productDetails(productid=None):
  
 @bp.route('/pid/<int:productid>/editreview/', methods=['GET', 'POST'])
 def editReview(productid = None):
-    product = Product.get(id=productid)
+    product = ProductDetails.get_details(id=productid)
     form = ReviewForm()
 
     userid = current_user.get_id()
@@ -138,14 +157,36 @@ def editReview(productid = None):
         print('edit Form is Valid', file=sys.stdout)
         ProductReview.editProductReview(pid = productid, uid = userid, text = editform.text.data, rating = editform.val.data)
         reviews = ProductReview.get_all_by_pid(productid)
-        return render_template('product_detailed.html', product= product, reviews = reviews, form = form, pid = productid)
+        avgreview = ProductReview.findAvgRating(pid=productid)
+        numreview = ProductReview.findNumReview(pid=productid)
+
+        print(avgreview, file=sys.stdout)
+        print(numreview, file=sys.stdout)
+
+        if avgreview==None:
+            avgreview = None
+        else:
+            avgreview = round(avgreview, 3)
+
+        return render_template('product_detailed.html', product= product, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
 
    
     if removeform.validate_on_submit():
         print('Remove form is Valid', file=sys.stdout)
         ProductReview.removeProductReview(pid = productid, uid = userid)
         reviews = ProductReview.get_all_by_pid(productid)
-        return render_template('product_detailed.html', product = product, reviews = reviews, form = form, pid = productid)
+        avgreview = ProductReview.findAvgRating(pid=productid)
+        numreview = ProductReview.findNumReview(pid=productid)
+
+        print(avgreview, file=sys.stdout)
+        print(numreview, file=sys.stdout)
+
+        if avgreview==None:
+            avgreview = None
+        else:
+            avgreview = round(avgreview, 3)
+         
+        return render_template('product_detailed.html', product = product, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
 
     return render_template('edit_review.html', editform = editform, removeform = removeform, productid = productid)
 

@@ -76,6 +76,18 @@ WHERE category LIKE :category
                               available=available,
                               category=category)
         return [Product(*row) for row in rows]
+    
+    @staticmethod
+    def get_search(available, search):
+        search = '%'+search+'%'
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE name LIKE :search
+''',
+                              available=available,
+                              search=search)
+        return [Product(*row) for row in rows]
 
 
 
