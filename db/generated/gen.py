@@ -46,24 +46,13 @@ def gen_products(num_products):
             price = f'{str(fake.random_int(max=500))}.{fake.random_int(max=99):02}'
             category = fake.random_element(categories)
             available = fake.random_element(elements=('true', 'false'))
+            des = fake.sentence(nb_words=100)[:-1]
+            image = fake.image_url(width=200, height=200, placeholder_url='https://picsum.photos/{width}/{height}')
             if available == 'true':
                 available_pids.append(pid)
-            writer.writerow([pid, name, price, category, available])
+            writer.writerow([pid, name, price, category, available, des, image])
         print(f'{num_products} generated; {len(available_pids)} available')
     return available_pids
-
-def gen_product_details(num_products):
-    with open('ProductDetailed.csv', 'w') as f:
-        writer = get_csv_writer(f)
-        print ('product details...', end=' ', flush=True)
-        for pid in range(num_products):
-            if pid % 100 == 0:
-                print(f'{pid}', end=' ', flush=True)
-            des = fake.sentence(nb_words=100)[:-1]
-            image = fake.image_url(width=200, height=200, placeholder_url='https://picsum.photos/{width}/{height}') 
-            writer.writerow([pid, des, image])
-        print(f'{num_products} product details generated')
-    return
 
 num_sellers = 50
 def gen_sellers():
@@ -194,7 +183,6 @@ def gen_line_item(available_sids, available_pids):
 
 gen_users(num_users)
 available_pids = gen_products(num_products)
-gen_product_details(num_products)
 sids = gen_sellers()
 prod_dict = gen_inventory(sids, available_pids)
 gen_purchases(num_purchases, available_pids, prod_dict)

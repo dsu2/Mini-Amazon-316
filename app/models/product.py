@@ -9,6 +9,7 @@ class Product:
         self.category = category
         self.available = available
 
+
     @staticmethod
     def get(id):
         rows = app.db.execute('''
@@ -41,7 +42,44 @@ LIMIT :k
 ''',
                               available=available, 
                               k=k)
+        return [Product(*row) for row in rows] 
+    
+    @staticmethod
+    def get_most_expensive(available):
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE available = :available
+ORDER BY price DESC
+''',
+                              available=available)
+        return [Product(*row) for row in rows] 
+
+    @staticmethod
+    def get_least_expensive(available):
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE available = :available
+ORDER BY price ASC
+''',
+                              available=available)
+        return [Product(*row) for row in rows] 
+
+    @staticmethod
+    def get_category(available, category):
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE category LIKE :category
+''',
+                              available=available,
+                              category=category)
         return [Product(*row) for row in rows]
+
+
+
+
 
 
 
