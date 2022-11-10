@@ -14,9 +14,9 @@ class Inventory:
     @staticmethod
     def get_by_pid(id):
         rows = app.db.execute('''
-SELECT uid, pid, count
+SELECT sid, pid, invNum
 FROM Inventory
-WHERE pid = :pid
+WHERE pid = :id
 ''',
                               id=id)
         return Inventory(*(rows[0])) if rows else None

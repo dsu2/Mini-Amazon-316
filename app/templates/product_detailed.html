@@ -27,12 +27,29 @@
   }
 </style>
 
+<br>
 <nav class = "navbar">
   <ul>
     <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
   </ul>
 </nav>
+
+
+<br>
+<div style="align-self:inherit;">
+  <b style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">{{product.name}}</b>
+</div>
+<br>
+<div style="display:inline-flex; width:fit-content;">
+  <section class="image" style="padding-left: 20px;">
+    <img src={{product.image}} alt="Product Image" align="left">
+  </section>
+  <p style="padding-left: 10px;">
+    <b>Description:</b><br>
+    {{product.des}}
+  </p>
+</div>
 
 <form action="" method="post">
   {{ form.hidden_tag() }}
@@ -76,9 +93,7 @@
     {% endfor %}
   </tbody>
 </table>
-<section>
 
-</section>
 <br>
 
 
