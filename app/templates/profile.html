@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        background-color: #242424;
+        position: sticky;
+        top: 0;
+    }
+
+    li {
+        float: left;
+    }
+
+    li a {
+        display: inline-block;
+        color: aliceblue;
+        text-align: left;
+        padding: 14px 16px;
+    }
+
+    li a:hover {
+        background-color: #1ccf00;
+    }
+
+    .active {
+        background-color: #118100;
+    }
+</style>
+<br>
+<nav class="navbar">
+    <ul>
+        <li><a href="{{url_for('index.index')}}">Home</a></li>
+        <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
+        <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    </ul>
+</nav>
+
+<br><br>
+
+
+{% if current_user.is_authenticated %}
+<h3>{{user_info.firstname}} {{user_info.lastname}} <a href="{{ url_for('users.editName') }}" type="button"
+        class="btn btn-light">Edit Name</a> </h3>
+<br>
+<p> <b>Email:</b> {{user_info.email}} <a href="{{ url_for('users.editEmail') }}" type="button"
+        class="btn btn-light">Change
+        Email</a></p>
+<a href="{{ url_for('users.editPassword') }}" type="button" class="btn btn-light">Change Password?</a>
+<br>
+<br>
+<p> <b>User ID:</b> {{user_info.id}}</p>
+
+{% endif %}
+
+{% endblock %}

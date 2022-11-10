@@ -19,6 +19,46 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Sign In')
 
 
+#registration form
+class RegistrationForm(FlaskForm):
+    firstname = StringField('First Name', validators=[DataRequired()])
+    lastname = StringField('Last Name', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(),
+                                       EqualTo('password')])
+    submit = SubmitField('Register')
+
+    def validate_email(self, email):
+        if User.email_exists(email.data):
+            raise ValidationError('Already a user with this email.')
+
+#email editing form
+class emailEditForm(FlaskForm):
+    new_email = StringField('Email', validators=[DataRequired(), Email()])
+    submit = SubmitField('Submit Changes')
+
+    def validate_email(self, new_email):
+        if User.email_exists(new_email.data):
+            raise ValidationError('Already a user with this email.')
+
+#first name editing form
+class nameEditForm(FlaskForm):
+    new_firstname = StringField('First Name', validators=[DataRequired()])
+    new_lastname = StringField('Last Name', validators=[DataRequired()])
+    submit = SubmitField('Submit Changes')
+
+#password editing form   
+class passwordEditForm(FlaskForm):
+    new_password = PasswordField('New Password', validators=[DataRequired()])
+    new_password2 = PasswordField(
+        'Repeat New Password', validators=[DataRequired(),
+                                       EqualTo('password')])
+    submit = SubmitField('Submit Changes')
+
+
+
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -37,21 +77,31 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+#profile page
+@bp.route('/profile', methods=['GET', 'POST'])
+def profile():
+    if current_user.is_authenticated:
+        user_info = User.get(current_user.id)
+    return render_template('profile.html', user_info=user_info)
 
-class RegistrationForm(FlaskForm):
-    firstname = StringField('First Name', validators=[DataRequired()])
-    lastname = StringField('Last Name', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField(
-        'Repeat Password', validators=[DataRequired(),
-                                       EqualTo('password')])
-    submit = SubmitField('Register')
+#editing user info
+@bp.route('/edit-name', methods=['GET', 'POST'])
+def editName():
+    if current_user.is_authenticated:
+        user_info = User.get(current_user.id)
+        return render_template('edit_name.html', user_info=user_info, nameForm = nameEditForm())
 
-    def validate_email(self, email):
-        if User.email_exists(email.data):
-            raise ValidationError('Already a user with this email.')
+@bp.route('/edit-email', methods=['GET', 'POST'])
+def editEmail():
+    if current_user.is_authenticated:
+        user_info = User.get(current_user.id)
+        return render_template('edit_email.html', user_info=user_info, emailForm = emailEditForm())
 
+@bp.route('/edit-password', methods=['GET', 'POST'])
+def editPassword():
+    if current_user.is_authenticated:
+        user_info = User.get(current_user.id)
+        return render_template('edit_password.html', user_info=user_info, pwForm = passwordEditForm())
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():

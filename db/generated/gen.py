@@ -147,6 +147,19 @@ def gen_purchases(num_purchases, available_pids, prod_dict):
         print(f'{num_purchases} generated')
     return
 
+def gen_purchases_details(num_purchases):
+    with open('PurchasesDetailed.csv', 'w') as f:
+        writer = get_csv_writer(f)
+        print ('purchases details...', end=' ', flush=True)
+        for id in range(num_purchases):
+            if id % 100 == 0:
+                print(f'{id}', end=' ', flush=True)
+            total_amt = fake.random_int(min=0.00, max=300.00)
+            no_of_items = fake.random_int(min=0, max=num_products) 
+            writer.writerow([id, total_amt, no_of_items])
+        print(f'{num_purchases} purchases details generated')
+    return  
+
 def gen_seller_review():
     with open('SellerReviews.csv', 'w') as f:
         with open('Purchases.csv', "r") as purchases:
@@ -194,13 +207,17 @@ def gen_line_item(available_sids, available_pids):
     return
     
 
-
+'''
 gen_users(num_users)
 available_pids = gen_products(num_products)
 gen_product_details(num_products)
 sids = gen_sellers()
 prod_dict = gen_inventory(sids, available_pids)
 gen_purchases(num_purchases, available_pids, prod_dict)
+
 gen_product_review()
 gen_seller_review()
 gen_line_item(sids, available_pids)
+'''
+
+gen_purchases_details(num_purchases)

@@ -22,6 +22,11 @@ SELECT pg_catalog.setval('public.sellers_id_seq',
 SELECT pg_catalog.setval('public.purchases_id_seq',
                          (SELECT MAX(id)+1 FROM Purchases),
                          false);
+
+\COPY PurchasesDetails FROM '/home/eye2/Mini-Amazon-316/db/generated/PurchasesDetailed.csv' WITH DELIMITER ',' NULL '' CSV
+SELECT pg_catalog.setval('public.sellers_id_seq',
+                         (SELECT MAX(purch_id)+1 FROM PurchasesDetails),
+                         false);
                          
 \COPY Inventory FROM '/home/eye2/Mini-Amazon-316/db/generated/Inventory.csv' WITH DELIMITER ',' NULL '' CSV
 

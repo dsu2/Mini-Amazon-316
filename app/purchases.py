@@ -17,23 +17,27 @@ from flask import Blueprint
 
 bp = Blueprint('purchases', __name__)
 
+'''
 class PurForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
     submit = SubmitField('Show Purchase History')
+'''
 
 @bp.route('/your-purchases', methods=['GET', 'POST'])
 def yourPurchases():
-    pform = PurForm()
-
+    # pform = PurForm()
     # access purchases via inputting user id
-    if pform.validate_on_submit():
-        all_user_purchases = Purchase.get_by_uid(True, pform.uid.data)
+    if current_user.is_authenticated:
+        all_user_purchases = Purchase.get_by_uid(current_user.id)
     
     else:
         all_user_purchases = None 
     
     return render_template('purchases.html',
-                           purchase_history=all_user_purchases,
-                           pform = pform)
+                           purchase_history=all_user_purchases)
 
-    
+@bp.route('/<int:purchaseid>/')
+def purchaseDetails(purchaseid=None):
+    purchase_specifics = Purchase.get(id=purchaseid)
+    return render_template('purchase_detailed.html', purchase_specifics = purchase_specifics)
+
