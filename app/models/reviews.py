@@ -1,5 +1,6 @@
 from flask import current_app as app
 from datetime import datetime
+from decimal import Decimal
 
 
 class ProductReview:
@@ -135,9 +136,9 @@ SELECT AVG(rating)
 FROM ProductReviews
 WHERE pid = :pid
 """,
-                                  pid = pid,
-                                  )
-        return round(rows[0][0], 3)
+                                pid = pid)
+        return rows[0][0]
+        
     
     @staticmethod
     def findNumReview(pid):
@@ -145,7 +146,7 @@ WHERE pid = :pid
 SELECT COUNT(*) FROM ProductReviews
 WHERE pid = :pid
 """,
-                                  pid = pid,
+                                  pid = pid
                                   )
         return rows[0][0]
         
