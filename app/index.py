@@ -15,14 +15,6 @@ from .models.inventory import Inventory
 from flask import Blueprint
 bp = Blueprint('index', __name__)
 
-class ExpensiveForm(FlaskForm):
-    k = IntegerField('Priciest number', validators=[DataRequired(), NumberRange(min=1, max =300)])
-    submit = SubmitField('sort')
-
-class ReviewForm(FlaskForm):
-    uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
-    submit = SubmitField('sort')
-
 class CartForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
     submit = SubmitField('sort')
@@ -38,17 +30,6 @@ class PurForm(FlaskForm):
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # get all available products for sale:
-    form = ExpensiveForm()
-    if form.validate_on_submit():
-        products = Product.get_expensive_k(True,form.k.data)
-    else:
-        products = Product.get_all(True)
-        
-    rform = ReviewForm()
-    if rform.validate_on_submit():
-        reviews = ProductReview.get_5_recent_uid(rform.uid.data)
-    else:
-        reviews = ProductReview.get_all()
 
     cform = CartForm()
     if cform.validate_on_submit():
@@ -76,10 +57,8 @@ def index():
         purchases = None
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           avail_products=products,
                            purchase_history=purchases,
-                           recent_reviews = reviews,
-                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
+                           cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
 
 
 

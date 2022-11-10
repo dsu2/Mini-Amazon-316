@@ -35,6 +35,7 @@
   </ul>
 </nav>
 
+
 <br>
 <div style="align-self:inherit;">
   <b style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">{{product.name}}</b>
@@ -49,6 +50,50 @@
     {{product.des}}
   </p>
 </div>
+
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <p>
+    {{ form.text.label }}
+    {{ form.text(type = "string") }}
+    {{ form.val.label }}
+    {{ form.val(type="number") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+</form> 
+<h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
+<br><br>
+<h2>Reviews:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+      <th scope="col">Rating</th>
+      <th scope="col"> </th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in reviews%}
+      <tr>
+        <th scope="row">{{review.pid}}</th>
+        <td>{{review.uid}}</td>
+        <td>{{review.time_purchased}}</td>
+        <td>{{review.text}}</td>
+        <td>{{review.rating}}</td>
+        <td>  
+          {% if current_user.is_authenticated and review.pid|string == current_user.get_id()%}
+          <a href= "{{ url_for('products.editReview', productid=pid) }}" class="btn btn-primary">Edit Review</a>  
+          {% endif %}                
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 <br>
 
 
