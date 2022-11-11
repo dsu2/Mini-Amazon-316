@@ -49,3 +49,14 @@ FROM Inventory
 LIMIT 50
 ''')
         return [Inventory(*row) for row in rows]
+
+    @staticmethod
+    def delete(pid):
+        print(pid)
+        rows = app.db.execute('''
+DELETE 
+FROM Inventory 
+WHERE pid =:pid
+''',
+                              pid=pid)
+        return
