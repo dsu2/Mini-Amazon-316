@@ -37,8 +37,9 @@
 
 
 <br>
-<div style="align-self:inherit;">
-  <b style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">{{product.name}}</b>
+<div style="display:flex; width:fit-content;">
+  <b style="font-size:250%; background-color:#242424; color:aliceblue; padding:10px;">{{product.name}}</b>
+  <p style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">{{product.price}}</p>
 </div>
 <br>
 <div style="display:inline-flex; width:fit-content;">
@@ -99,6 +100,27 @@
 </table>
 
 <br>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Inventory Quantity</th>
+      <th scope="col">Add</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for seller in sellers%}
+      <tr>
+        <th scope="row">{{seller.sid}}</th>
+        <td>{{seller.invNum}}</td>
+        <td>
+          <a href= "{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Add to Cart</a> 
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 
 
