@@ -14,11 +14,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     category VARCHAR(255) NOT NULL,
-    available BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE ProductDetails (
-    pid INT NOT NULL REFERENCES Products(id),
+    available BOOLEAN DEFAULT TRUE,
     des VARCHAR(2000) NOT NULL,
     image VARCHAR(2083) NOT NULL
 );
@@ -53,6 +49,7 @@ CREATE TABLE ProductReviews (
     pid INT NOT NULL REFERENCES Products(id),
     uid INT NOT NULL REFERENCES Users(id),
     text VARCHAR(2000) UNIQUE NOT NULL,
+    rating INT NOT NULL,
     numPos INT NOT NULL,
     numNeg INT NOT NULL,
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
@@ -63,6 +60,7 @@ CREATE TABLE SellerReviews (
     sid INT NOT NULL REFERENCES Sellers(id),
     uid INT NOT NULL REFERENCES Users(id),
     text VARCHAR(2000) UNIQUE NOT NULL,
+    rating INT NOT NULL,
     numPos INT NOT NULL,
     numNeg INT NOT NULL,
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),

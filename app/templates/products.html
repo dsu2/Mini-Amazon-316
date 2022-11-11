@@ -36,6 +36,7 @@
     <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
     <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
   </ul>
 </nav>
 
@@ -47,10 +48,46 @@
     {{ form.k(type="number", min="1", max="300") }}
     {{ form.submit(class_="btn btn-black") }}
   </p>
+</form> 
 
 </form>
+<form action="" method="post">
+  {{form.hidden_tag()}}
+  <p>
+    {{searchForm.search.label}}
+    {{searchForm.search(type="string")}}
+    {{searchForm.submit(class_="btn btn-black")}}
+  </p>
+</form>
+
+<form action="" method="post">
+  {{ categoryForm.hidden_tag() }}
+  <p>
+    {{ categoryForm.category.label }}
+    {{ categoryForm.category(type="select") }}
+    {{ categoryForm.submit(class_="btn btn-black") }}
+  </p>
+</form> 
+  
+
 
 <br>
+
+<ul>
+  <li>
+    <form action="{{ url_for('products.high2low') }}">
+      <input type="submit" value="High to Low" />
+    </form>
+  </li>
+  <li>
+    <form action="{{ url_for('products.low2high') }}">
+      <input type="submit" value="Low to High"/>
+    </form>
+  </li>
+</ul>
+
+<br><br>
+
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>

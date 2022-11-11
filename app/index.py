@@ -15,6 +15,7 @@ from .models.inventory import Inventory
 
 from flask import Blueprint
 
+
 bp = Blueprint('index', __name__)
 class ExpensiveForm(FlaskForm):
     k = IntegerField('Priciest number', validators=[DataRequired(), NumberRange(min=1, max =300)])
@@ -40,17 +41,6 @@ class PurForm(FlaskForm):
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # get all available products for sale:
-    form = ExpensiveForm()
-    if form.validate_on_submit():
-        products = Product.get_expensive_k(True,form.k.data)
-    else:
-        products = Product.get_all(True)
-        
-    rform = ReviewForm()
-    if rform.validate_on_submit():
-        reviews = ProductReview.get_5_recent_uid(rform.uid.data)
-    else:
-        reviews = ProductReview.get_all()
 
     cform = CartForm()
     if cform.validate_on_submit():
@@ -86,7 +76,9 @@ def index():
 
 
 
+
 #reviews part now?
+
 
 """
 @bp.route('/', methods=['GET', 'POST'])

@@ -30,12 +30,14 @@
     background-color: #118100;
   }
 </style>
+
 <br>
 <nav class="navbar">
   <ul>
     <li><a class="active" href="{{url_for('index.index')}}">Home</a></li>
     <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
     <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
   </ul>
 </nav>
 <form action="" method="post">
@@ -71,6 +73,7 @@
     {% endfor %}
   </tbody>
 </table>
+
 
 <br><br>
 <form action="" method="post">
