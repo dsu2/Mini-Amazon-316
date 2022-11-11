@@ -36,12 +36,78 @@
   <ul>
     <li><a class="active" href="{{url_for('index.index')}}">Home</a></li>
     <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
+    <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
     <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
     <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
-
   </ul>
 </nav>
+<form action="" method="post">
+  {{ rform.hidden_tag() }}
+  <p>
+    {{ rform.uid.label }}
+    {{ rform.uid(type="number", min="1", max="10000") }}
+    {{ rform.submit(class_="btn btn-black") }}
+  </p>
+</form>
 
+<br>
+
+<h2>Reviews:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in recent_reviews%}
+    <tr>
+      <th scope="row">{{review.pid}}</th>
+      <td>{{review.uid}}</td>
+      <td>{{review.time_purchased}}</td>
+      <td>{{review.text}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<br><br>
+<form action="" method="post">
+  {{ iform.hidden_tag() }}
+  <p>
+    {{ iform.sid.label }}
+    {{ iform.sid(type="number", min="1", max="10000") }}
+    {{ iform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>Inventory:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User/Seller ID</th>
+      <th scope="col">Product ID</th>
+      <th scope="col">Num Items</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for inv in user_inventory%}
+    <tr>
+      <th scope="row">{{inv.sid}}</th>
+      <td>{{inv.pid}}</td>
+      <td>{{inv.invNum}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 
 <br><br>

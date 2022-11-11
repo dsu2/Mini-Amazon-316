@@ -35,11 +35,10 @@
   <ul>
     <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
-    <<<<<<< HEAD <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
-      =======
-      <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
-      <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
-      >>>>>>> 6f33248930a398a46ed1aa274c6fd96189cbce3e
+    <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
+    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
+
   </ul>
 </nav>
 
@@ -53,6 +52,7 @@
   </p>
 </form>
 
+</form>
 <form action="" method="post">
   {{form.hidden_tag()}}
   <p>

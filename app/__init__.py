@@ -24,15 +24,13 @@ def create_app():
     from .products import bp as products_bp
     app.register_blueprint(products_bp)
 
-<<<<<<< HEAD
     from .purchases import bp as purchases_bp
     app.register_blueprint(purchases_bp)
-=======
+
     from .cart import bp as cart_bp
     app.register_blueprint(cart_bp)
 
     from .Inventory import bp as inventory_bp
     app.register_blueprint(inventory_bp)
->>>>>>> 6f33248930a398a46ed1aa274c6fd96189cbce3e
 
     return app

@@ -54,15 +54,9 @@ def gen_products(num_products):
     return available_pids
 
 
-
-<<<<<<< HEAD
-num_sellers = 50
-
-=======
-
 percent_sellers = 0.5
 num_sellers = int(percent_sellers * num_users)
->>>>>>> 6f33248930a398a46ed1aa274c6fd96189cbce3e
+
 
 def gen_sellers():
     sids = []
@@ -79,7 +73,6 @@ def gen_sellers():
     fake.unique.clear()
     return sids 
 
-<<<<<<< HEAD
 
 def gen_product_review():
     with open('ProductReviews.csv', 'w') as f:
@@ -106,8 +99,7 @@ def gen_product_review():
             print(f'{numreviews} generated')
     return
 
-=======
->>>>>>> 6f33248930a398a46ed1aa274c6fd96189cbce3e
+
 def gen_inventory(available_sids, available_pids):
     proddict = {}
     with open('Inventory.csv', 'w') as f:
@@ -158,7 +150,6 @@ def gen_purchases_details(num_purchases):
             writer.writerow([id, total_amt, no_of_items])
         print(f'{num_purchases} purchases details generated')
     return  
-    
 def gen_product_review():
     with open('ProductReviews.csv', 'w') as f:
         with open('Purchases.csv', "r") as purchases:
@@ -233,7 +224,7 @@ def gen_line_item(available_sids, available_pids):
     return
     
 
-'''
+
 gen_users(num_users)
 available_pids = gen_products(num_products)
 sids = gen_sellers()
@@ -243,6 +234,6 @@ gen_purchases(num_purchases, available_pids, prod_dict)
 gen_product_review()
 gen_seller_review()
 gen_line_item(sids, available_pids)
-'''
+
 
 gen_purchases_details(num_purchases)
