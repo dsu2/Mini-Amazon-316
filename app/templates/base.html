@@ -9,40 +9,39 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/example.css') }}">
   <style>
     body {
-        font-family: 'Courier New', Courier, monospace;
+      font-family: 'Courier New', Courier, monospace;
     }
 
     .main-head {
-        height: 150px;
-        background: rgb(66, 97, 255);
+      height: 150px;
+      background: rgb(66, 97, 255);
     }
 
     .sidenav {
-        height: 100%;
-        background-color: rgb(66, 97, 255);
-        overflow-x: hidden;
-        padding-top: 20px;
-        padding-left: 10px;
-        padding-right: 20px;
+      height: 100%;
+      background-color: rgb(66, 97, 255);
+      overflow-x: hidden;
+      padding-top: 20px;
+      padding-left: 10px;
     }
 
     .main {
-        padding: 0px 10px;
+      padding: 0px 10px;
     }
 
     .login-main-text {
-        margin-top: 20%;
-        padding: 60px;
-        color: #fff;
+      margin-top: 20%;
+      padding: 60px;
+      color: #fff;
     }
 
     .login-main-text h2 {
-        font-weight: 300;
+      font-weight: 300;
     }
 
     .btn-black {
-        background-color: #000 !important;
-        color: #fff;
+      background-color: #000 !important;
+      color: #fff;
     }
   </style>
 </head>
@@ -50,18 +49,24 @@
 <body>
   <div class="sidenav">
     {% block msg %}
-      <h1 style="color:aliceblue">Welcome to CompSci 316 Mini Amazon!</h1>
-      <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
-        {% if current_user.is_authenticated %}
-          Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log out</a>
-        {% else %}
-          <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
-        {% endif %}
-      </div>
+    <h1 style="color:aliceblue">Welcome to CompSci 316 Mini Amazon!</h1>
+    <div style="color: aliceblue; text-align: right; margin-bottom: 25px">
+      {% if current_user.is_authenticated %}
+      Hello {{current_user.firstname}}! <a href="{{ url_for('users.logout') }}" type="button" class="btn btn-light">Log
+        out</a>
+      <a href="{{ url_for('users.profile') }}" type="button" class="btn btn-light">View Profile</a>
+      {% else %}
+      <a href="{{ url_for('users.login') }}" type="button" class="btn btn-light">Log in</a>
+      {% endif %}
+    </div>
     {% endblock %}
   </div>
+
+  <br><br>
+
   <div class="main">
-    {% block content %}{% endblock %}
+    {% block content %}
+    {% endblock %}
   </div>
 </body>
 

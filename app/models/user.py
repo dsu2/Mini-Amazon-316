@@ -67,3 +67,48 @@ WHERE id = :id
 """,
                               id=id)
         return User(*(rows[0])) if rows else None
+
+    def editUserName(id, firstname, lastname):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET firstname = :firstname, lastname = :lastname
+WHERE id = :id
+""",
+                                  id=id, firstname=firstname, lastname=lastname)
+
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e
+
+    def editUserEmail(id, email):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET email = :email  
+WHERE id = :id
+""",
+                                  id=id, email=email)
+
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e  
+
+    def editUserPassword(id, password):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET password = :password  
+WHERE id = :id
+""",
+                                  id=id, password=password)
+
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e  

@@ -11,8 +11,18 @@ from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.inventory import Inventory
 
+
 from flask import Blueprint
+
+
 bp = Blueprint('index', __name__)
+class ExpensiveForm(FlaskForm):
+    k = IntegerField('Priciest number', validators=[DataRequired(), NumberRange(min=1, max =300)])
+    submit = SubmitField('sort')
+
+class ReviewForm(FlaskForm):
+    uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
+    submit = SubmitField('sort')
 
 class CartForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
@@ -25,6 +35,7 @@ class InvForm(FlaskForm):
 class PurForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=0, max =10000)])
     submit = SubmitField('sort')
+
 
 @bp.route('/', methods=['GET', 'POST'])
 def index():
@@ -41,6 +52,7 @@ def index():
         inv = Inventory.get_by_sid(iform.sid.data)
     else:
         inv = Inventory.get_all()
+    '''
 
     pform = PurForm()
     if pform.validate_on_submit():
@@ -53,7 +65,8 @@ def index():
         purchases = Purchase.get_all_by_uid_since(
             current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
     else:
-        purchases = None
+        purchases = None 
+    '''
     # render the page by adding information to the index.html file
     return render_template('index.html',
                            purchase_history=purchases,

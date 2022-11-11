@@ -32,6 +32,12 @@ CREATE TABLE Purchases (
     sid INT NOT NULL REFERENCES Sellers(id)
 );
 
+CREATE TABLE PurchasesDetails (
+    purch_id INT NOT NULL REFERENCES Purchases(id),
+    total_amount FLOAT NOT NULL,
+    no_of_items INT NOT NULL
+);
+
 CREATE TABLE Inventory (
     sid INT NOT NULL REFERENCES Sellers(id),
     pid INT NOT NULL REFERENCES Products(id),

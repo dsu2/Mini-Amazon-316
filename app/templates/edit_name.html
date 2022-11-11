@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Edit Name</h1>
+<form action="" method="post">
+    {{ nameForm.hidden_tag() }}
+    <p>
+        {{ nameForm.new_firstname.label }}<br />
+        {{ nameForm.new_firstname(size=32) }}<br />
+        {% for error in nameForm.new_firstname.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        {{ nameForm.new_lastname.label }}<br />
+        {{ nameForm.new_lastname(size=32) }}<br />
+        {% for error in nameForm.new_lastname.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ nameForm.submit() }}</p>
+</form>
+
+{% endblock %}
