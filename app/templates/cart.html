@@ -58,6 +58,8 @@
       <th scope="col">Seller ID</th>
       <th scope="col">Quantity</th>
         <th scope="col">Edit Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Subtotal</th>
         <th scope="col">Modify</th>
 
     </tr>
@@ -74,6 +76,9 @@
               <input id="number" type="number" name="quantity" value=“0” />
               <input type="submit"></form>
           </td>
+          <td>${{cart.price}}</td>
+          <td>{% set subtotal = cart.num_item * cart.price %}
+          ${{ subtotal }}</td>
       <td>
         <form method="post" action="{{ url_for('cart.remove',pid=cart.pid) }}">
   <button type="submit">Delete</button>
@@ -82,8 +87,9 @@
       </tr>
     {% endfor %}
   </tbody>
-</table>
 
+<h2>Cart Total:</h2>
 <br><br>
 
 {% endblock %}
+
