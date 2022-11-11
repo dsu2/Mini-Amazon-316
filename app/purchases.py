@@ -9,6 +9,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Nu
 
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.purchaseDetail import PurchaseDetail
 from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.inventory import Inventory
@@ -37,7 +38,9 @@ def yourPurchases():
                            purchase_history=all_user_purchases)
 
 @bp.route('/<int:purchaseid>/')
-def purchaseDetails(purchaseid=None):
-    purchase_specifics = Purchase.get(id=purchaseid)
-    return render_template('purchase_detailed.html', purchase_specifics = purchase_specifics)
+def purchaseDetails():
+    if current_user.is_authenticated:
+        purchase_specifics = PurchaseDetail.get_by_purchaseid(id=id)
+    return render_template('purchase_detailed.html', 
+                        purchase_specifics = purchase_specifics)
 

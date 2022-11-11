@@ -31,27 +31,26 @@
         background-color: #118100;
     }
 </style>
-
 <nav class="navbar">
     <ul>
         <li><a href="{{url_for('index.index')}}">Home</a></li>
         <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
-        <li><a class="active" href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+        <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
     </ul>
 </nav>
 
-{% if current_user.is_authenticated %}
-<h3>Purchase Details:</h3>
+<br><br>
+<h1>Change Email Address</h1>
+<form action="" method="post">
+    {{ eForm.hidden_tag() }}
+    <p>
+        {{ eForm.new_email.label }}<br />
+        {{ eForm.new_email(size=32) }}<br />
+        {% for error in eForm.new_email.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ eForm.submit() }}</p>
+</form>
 
-{% for item in purchase_specifics%}
-<p> Purchase ID: {{item.id}} </p>
-<p> Total Amount Paid: {{item.total_amt}} </p>
-<p> Number of Items Bought: {{item.no_of_items}} </p>
-
-{% endfor %}
-
-{% else %}
-<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
-
-{% endif %}
 {% endblock %}

@@ -5,6 +5,8 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 
+import sys
+
 from .models.user import User
 
 
@@ -38,10 +40,6 @@ class RegistrationForm(FlaskForm):
 class emailEditForm(FlaskForm):
     new_email = StringField('Email', validators=[DataRequired(), Email()])
     submit = SubmitField('Submit Changes')
-
-    def validate_email(self, new_email):
-        if User.email_exists(new_email.data):
-            raise ValidationError('Already a user with this email.')
 
 #first name editing form
 class nameEditForm(FlaskForm):
@@ -86,22 +84,25 @@ def profile():
 
 #editing user info
 @bp.route('/edit-name', methods=['GET', 'POST'])
-def editName():
-    if current_user.is_authenticated:
-        user_info = User.get(current_user.id)
-        return render_template('edit_name.html', user_info=user_info, nameForm = nameEditForm())
+def editName(userid = None):
+    nameForm = nameEditForm()
+    userid = current_user.get_id()
+    if nameForm.validate_on_submit:
+        print('name Form is Valid', file=sys.stdout)
+        User.editUserName(id=userid, firstname=nameForm.text.data, lastname=nameForm.text.data)
+        return render_template('edit_name.html')
 
 @bp.route('/edit-email', methods=['GET', 'POST'])
 def editEmail():
     if current_user.is_authenticated:
         user_info = User.get(current_user.id)
-        return render_template('edit_email.html', user_info=user_info, emailForm = emailEditForm())
+        return render_template('change_email.html', user_info=user_info, eForm = emailEditForm())
 
 @bp.route('/edit-password', methods=['GET', 'POST'])
 def editPassword():
     if current_user.is_authenticated:
         user_info = User.get(current_user.id)
-        return render_template('edit_password.html', user_info=user_info, pwForm = passwordEditForm())
+        return render_template('change_password.html', user_info=user_info, pwForm = passwordEditForm())
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():

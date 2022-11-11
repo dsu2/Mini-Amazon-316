@@ -155,7 +155,7 @@ def gen_purchases_details(num_purchases):
             if id % 100 == 0:
                 print(f'{id}', end=' ', flush=True)
             total_amt = fake.random_int(min=0.00, max=300.00)
-            no_of_items = fake.random_int(min=0, max=num_products) 
+            no_of_items = 1 
             writer.writerow([id, total_amt, no_of_items])
         print(f'{num_purchases} purchases details generated')
     return  
