@@ -19,7 +19,7 @@ FROM Inventory
 WHERE pid = :id
 ''',
                               id=id)
-        return Inventory(*(rows[0])) if rows else None
+        return [Inventory(*row) for row in rows]
 
     @staticmethod
     def get_by_sid(sid):
