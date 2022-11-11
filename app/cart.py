@@ -19,23 +19,39 @@ bp = Blueprint('cart', __name__)
 class CartForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
     submit = SubmitField('sort')
-class CartRemoveForm(FlaskForm):
-    submit = SubmitField('Delete')
 
 
 @bp.route('/items', methods=['GET', 'POST'])
 def items():
     cform = CartForm()
+
     if cform.validate_on_submit():
         cart = Cart.get_cart(cform.uid.data)
     else:
         cart = Cart.get_all()
 
     return render_template('cart.html',user_cart = cart, cform = cform)
-'''
-@bp.route('pid/<int:productid>/edititem/',methods=['GET','POST'])
-def edititem(productid = None):
-    cart = Cart.get(id=productid)
-    removeform = CartRemoveForm()
-'''
 
+@bp.route('/delete/<int:pid>' ,methods=['GET','POST'])
+def remove(pid):
+    cart = Cart.delete_item(pid)
+    cform = CartForm()
+    if cform.validate_on_submit():
+        cart = Cart.get_cart(cform.uid.data)
+    else:
+        cart = Cart.get_all()
+
+    return render_template('cart.html', user_cart=cart, cform=cform)
+
+@bp.route('/edit_num/<int:pid>' ,methods=['GET','POST'])
+def edit_num(pid):
+    cform = CartForm()
+    if 'quantity' in request.form:
+        quantity = request.form['quantity']
+        Cart.edit_num_item(pid, quantity)
+    if cform.validate_on_submit():
+        cart = Cart.get_cart(cform.uid.data)
+    else:
+        cart = Cart.get_all()
+
+    return render_template('cart.html', user_cart=cart, cform=cform)
