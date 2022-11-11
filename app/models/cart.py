@@ -1,13 +1,13 @@
 from flask import current_app as app
 
-
 class Cart:
-
-    def __init__(self, uid, pid, sid, num_item):
+    def __init__(self, uid, pid, pname, sid, num_item, price):
         self.uid = uid
         self.pid = pid
+        self.pname = pname
         self.sid = sid
         self.num_item = num_item
+        self.price = price
 
     @staticmethod
     def get(id):
@@ -35,9 +35,14 @@ ORDER BY time_added_to_cart DESC
     @staticmethod
     def get_cart(uid):
         rows = app.db.execute('''
-SELECT uid, pid, sid, num_item
-FROM Line_item
-WHERE uid = :uid
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
+FROM Line_item as L
+FULL OUTER JOIN
+(SELECT Products.id, Products.name,Products.price
+FROM Products ) as T2
+ON L.pid = T2.id
+WHERE L.uid =:uid
+LIMIT 50
 ''',
                               uid=uid)
         return [Cart(*row) for row in rows]
@@ -45,8 +50,33 @@ WHERE uid = :uid
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT uid, pid, sid, num_item
-FROM Line_item
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
+FROM Line_item as L
+JOIN
+(SELECT Products.id, Products.name, Products.price
+FROM Products ) as T2
+ON L.pid = T2.id
 LIMIT 50
 ''')
         return [Cart(*row) for row in rows]
+
+    @staticmethod
+    def delete_item(pid):
+        rows = app.db.execute('''
+    DELETE 
+    FROM Line_item 
+    WHERE pid =:pid
+    ''',
+                              pid=pid)
+        return
+
+    @staticmethod
+    def edit_num_item(pid, num_item):
+        print(pid, num_item)
+        rows = app.db.execute('''
+    UPDATE Line_item
+    SET num_item =:num_item
+    WHERE pid =:pid
+    ''',
+                              pid=pid, num_item=num_item)
+        return

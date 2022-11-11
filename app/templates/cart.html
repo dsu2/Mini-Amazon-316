@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    background-color: #242424;
+    position: sticky;
+    top:0;
+  }
+  li {
+    float: left;
+  }
+  li a {
+    display: inline-block;
+    color: aliceblue;
+    text-align: left;
+    padding: 14px 16px;
+  }
+  li a:hover {
+    background-color: #1ccf00;
+  }
+  .active {
+    background-color: #118100;
+  }
+</style>
+
+<nav class = "navbar">
+  <ul>
+    <li><a href="{{url_for('index.index')}}">Home</a></li>
+      <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
+    <li><a class="active" href="{{ url_for('cart.items') }}">User Cart</a></li>
+    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
+  </ul>
+</nav>
+
+<br><br>
+<form action="" method="post">
+  {{ cform.hidden_tag() }}
+  <p>
+    {{ cform.uid.label }}
+    {{ cform.uid(type="number", min="0", max="10000") }}
+    {{ cform.submit(class_="btn btn-black") }}
+  </p>
+
+</form>
+
+<br>
+
+<h2>Cart:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+        <th scope="col">User ID</th>
+        <th scope="col">Product ID</th>
+        <th scope="col">Product Name</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Quantity</th>
+        <th scope="col">Edit Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Subtotal</th>
+        <th scope="col">Modify</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for cart in user_cart%}
+      <tr>
+      <td>{{cart.uid}}</td>
+        <td>{{cart.pid}}</td>
+          <td>{{cart.pname}}</td>
+        <td>{{cart.sid}}</td>
+        <td>{{cart.num_item}}</td>
+          <td><form method="post" action="{{ url_for('cart.edit_num',pid=cart.pid) }}" >
+              <input id="number" type="number" name="quantity" value=“0” />
+              <input type="submit"></form>
+          </td>
+          <td>${{cart.price}}</td>
+          <td>{% set subtotal = cart.num_item * cart.price %}
+          ${{ subtotal }}</td>
+      <td>
+        <form method="post" action="{{ url_for('cart.remove',pid=cart.pid) }}">
+  <button type="submit">Delete</button>
+</form>
+      </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+
+<h2>Cart Total:</h2>
+<br><br>
+
+{% endblock %}
+

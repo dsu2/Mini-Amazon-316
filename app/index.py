@@ -5,7 +5,6 @@ import datetime
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
-
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.reviews import ProductReview
@@ -40,17 +39,6 @@ class PurForm(FlaskForm):
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # get all available products for sale:
-    form = ExpensiveForm()
-    if form.validate_on_submit():
-        products = Product.get_expensive_k(True,form.k.data)
-    else:
-        products = Product.get_all(True)
-        
-    rform = ReviewForm()
-    if rform.validate_on_submit():
-        reviews = ProductReview.get_5_recent_uid(rform.uid.data)
-    else:
-        reviews = ProductReview.get_all()
 
     cform = CartForm()
     if cform.validate_on_submit():
@@ -79,10 +67,7 @@ def index():
     '''
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           avail_products=products,
-                           #purchase_history=purchases,
-                           recent_reviews = reviews,
-                           form=form, rform = rform, cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
+                            cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
 
 
 
