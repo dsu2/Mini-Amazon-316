@@ -89,20 +89,40 @@ def editName(userid = None):
     userid = current_user.get_id()
     if nameForm.validate_on_submit:
         print('name Form is Valid', file=sys.stdout)
-        User.editUserName(id=userid, firstname=nameForm.text.data, lastname=nameForm.text.data)
-        return render_template('edit_name.html')
+        print(nameForm.new_firstname.data)
+        User.editUserName(id=userid, firstname=nameForm.new_firstname.data, lastname=nameForm.new_lastname.data)
+        if nameForm.new_firstname.data and nameForm.new_lastname.data:
+            return redirect(url_for('users.profile'))
+    return render_template('edit_name.html', nameForm=nameForm)
 
 @bp.route('/edit-email', methods=['GET', 'POST'])
-def editEmail():
-    if current_user.is_authenticated:
-        user_info = User.get(current_user.id)
-        return render_template('change_email.html', user_info=user_info, eForm = emailEditForm())
+def editEmail(userid = None):
+    eForm = emailEditForm()
+    userid = current_user.get_id()
+    if eForm.validate_on_submit:
+        print('email Form is Valid', file=sys.stdout)
+        print(eForm.new_email.data)
+        User.editUserEmail(id=userid, email=eForm.new_email.data)
+        if eForm.new_email.data:
+            return redirect(url_for('users.profile'))
+    return render_template('change_email.html', eForm = eForm)
 
 @bp.route('/edit-password', methods=['GET', 'POST'])
-def editPassword():
-    if current_user.is_authenticated:
-        user_info = User.get(current_user.id)
-        return render_template('change_password.html', user_info=user_info, pwForm = passwordEditForm())
+def editPassword(userid = None):
+    pwForm = passwordEditForm()
+    userid = current_user.get_id()
+
+    if pwForm.validate_on_submit:
+        print('password Form is Valid', file=sys.stdout)
+        print(pwForm.new_password.data)
+        if pwForm.new_password.data != pwForm.new_password2.data:
+            flash('Passwords do not match!')
+            return redirect(url_for('users.editPassword'))
+        else:
+            User.editUserPassword(id=userid, password=pwForm.new_password.data)
+            if pwForm.new_password.data and pwForm.new_password2.data:
+                return redirect(url_for('users.profile'))
+    return render_template('change_password.html', pwForm = pwForm)
 
 @bp.route('/register', methods=['GET', 'POST'])
 def register():

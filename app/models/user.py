@@ -71,7 +71,7 @@ WHERE id = :id
     def editUserName(id, firstname, lastname):
         try:
             rows = app.db.execute("""
-UPDATE User
+UPDATE Users
 SET firstname = :firstname, lastname = :lastname
 WHERE id = :id
 """,
@@ -86,7 +86,7 @@ WHERE id = :id
     def editUserEmail(id, email):
         try:
             rows = app.db.execute("""
-UPDATE User
+UPDATE Users
 SET email = :email  
 WHERE id = :id
 """,
@@ -101,7 +101,7 @@ WHERE id = :id
     def editUserPassword(id, password):
         try:
             rows = app.db.execute("""
-UPDATE User
+UPDATE Users
 SET password = :password  
 WHERE id = :id
 """,

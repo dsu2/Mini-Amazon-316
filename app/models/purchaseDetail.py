@@ -2,19 +2,19 @@ from flask import current_app as app
 
 
 class PurchaseDetail:
-    def __init__(self, id, tot_amt, no_of_items):
-        self.id = id
-        self.tot_amt = tot_amt
+    def __init__(self, purch_id,  total_amount, no_of_items):
+        self.purch_id = purch_id
+        self. total_amount =  total_amount
         self.no_of_items = no_of_items
 
 
     @staticmethod
-    def get_by_purchaseid(id):
+    def get_by_purchaseid(purch_id):
         rows = app.db.execute('''
-SELECT id, tot_amt, no_of_items
+SELECT purch_id,  total_amount, no_of_items
 FROM PurchasesDetails
-WHERE id = :id
+WHERE purch_id = :purch_id
 ''',
-                              id=id)
+                              purch_id=purch_id)
         return [PurchaseDetail(*row) for row in rows]
 

@@ -39,16 +39,13 @@
         <li><a class="active" href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
     </ul>
 </nav>
-
+<br>
 {% if current_user.is_authenticated %}
 <h3>Purchase Details:</h3>
-
-{% for item in purchase_specifics%}
-<p> Purchase ID: {{item.id}} </p>
-<p> Total Amount Paid: {{item.total_amt}} </p>
-<p> Number of Items Bought: {{item.no_of_items}} </p>
-
-{% endfor %}
+<br>
+<p> <b>Purchase ID:</b> {{purchase_specifics.purch_id}} </p>
+<p> <b>Total Amount Paid:</b> {{purchase_specifics.total_amount}} </p>
+<p> <b>Number of Items Bought:</b> {{purchase_specifics.no_of_items}} </p>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
