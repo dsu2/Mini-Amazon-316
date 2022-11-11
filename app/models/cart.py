@@ -1,8 +1,6 @@
 from flask import current_app as app
 
-
 class Cart:
-
     def __init__(self, uid, pid, pname, sid, num_item):
         self.uid = uid
         self.pid = pid
@@ -61,4 +59,23 @@ LIMIT 50
 ''')
         return [Cart(*row) for row in rows]
 
+    @staticmethod
+    def delete_item(pid):
+        rows = app.db.execute('''
+    DELETE 
+    FROM Line_item 
+    WHERE pid =:pid
+    ''',
+                              pid=pid)
+        return
 
+    @staticmethod
+    def edit_num_item(pid, num_item):
+        print(pid, num_item)
+        rows = app.db.execute('''
+    UPDATE Line_item
+    SET num_item =:num_item
+    WHERE pid =:pid
+    ''',
+                              pid=pid, num_item=num_item)
+        return

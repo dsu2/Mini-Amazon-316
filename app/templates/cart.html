@@ -56,7 +56,8 @@
         <th scope="col">Product ID</th>
         <th scope="col">Product Name</th>
       <th scope="col">Seller ID</th>
-      <th scope="col">Amount of Item</th>
+      <th scope="col">Quantity</th>
+        <th scope="col">Edit Quantity</th>
         <th scope="col">Modify</th>
 
     </tr>
@@ -69,8 +70,12 @@
           <td>{{cart.pname}}</td>
         <td>{{cart.sid}}</td>
         <td>{{cart.num_item}}</td>
+          <td><form method="post" action="{{ url_for('cart.edit_num',pid=cart.pid) }}" >
+              <input id="number" type="number" name="quantity" value=“0” />
+              <input type="submit"></form>
+          </td>
       <td>
-        <form method="post" >
+        <form method="post" action="{{ url_for('cart.remove',pid=cart.pid) }}">
   <button type="submit">Delete</button>
 </form>
       </td>
