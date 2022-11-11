@@ -147,6 +147,7 @@ def productDetails(productid=None):
  
 @bp.route('/pid/<int:productid>/editreview/', methods=['GET', 'POST'])
 def editReview(productid = None):
+    sellers = Inventory.get_by_pid(id=productid)
     product = ProductDetails.get_details(id=productid)
     form = ReviewForm()
 
@@ -168,7 +169,7 @@ def editReview(productid = None):
         else:
             avgreview = round(avgreview, 3)
 
-        return render_template('product_detailed.html', product= product, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
+        return render_template('product_detailed.html', product= product, sellers=sellers, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
 
    
     if removeform.validate_on_submit():
@@ -186,7 +187,7 @@ def editReview(productid = None):
         else:
             avgreview = round(avgreview, 3)
          
-        return render_template('product_detailed.html', product = product, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
+        return render_template('product_detailed.html', product = product, sellers=sellers, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
 
     return render_template('edit_review.html', editform = editform, removeform = removeform, productid = productid)
 

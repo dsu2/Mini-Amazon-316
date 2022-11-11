@@ -99,6 +99,27 @@
 </table>
 
 <br>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Inventory Quantity</th>
+      <th scope="col">Add</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for seller in sellers%}
+      <tr>
+        <th scope="row">{{seller.sid}}</th>
+        <td>{{seller.invNum}}</td>
+        <td>
+          <a href= "{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Add to Cart</a> 
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
 
 
 
