@@ -64,24 +64,3 @@ def index():
 
 #reviews part now?
 
-"""
-@bp.route('/', methods=['GET', 'POST'])
-def index():
-    # get all available products for sale:
-    form = ReviewForm()
-    if form.validate_on_submit():
-        reviews = ProductReview.get_5_recent_uid(form.uid.data)
-    else:
-        reviews = ProductReview.get_all()
-    # find the products current user has bought:
-    if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-    else:
-        purchases = None
-    # render the page by adding information to the index.html file
-    return render_template('index.html',
-                           avail_products=products,
-                           purchase_history=purchases,
-                           form=form)
-    """

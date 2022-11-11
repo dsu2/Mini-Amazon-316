@@ -171,13 +171,13 @@ def gen_line_item(available_sids, available_pids):
         writer = get_csv_writer(li)
         print('Line_item...', end = ' ', flush = True)
         for uid in range(num_users):
-            num_uniitems = fake.random_int(0,99)
+            num_uniitems = fake.random_int(0,20)
             for item in range(num_uniitems):
                 if uid % 100 == 0:
                     print(f'{uid}', end=' ', flush=True)
                 sid = fake.random_element(elements=available_sids)
                 pid = fake.random_element(elements=available_pids)
-                num_item = fake.random_int(0, 1000)
+                num_item = fake.random_int(0, 10)
                 if (str(uid) + " " + str(pid) + " " + str(sid)) in used:
                     continue
                 else:
