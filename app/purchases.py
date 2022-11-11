@@ -36,7 +36,7 @@ def yourPurchases():
                            purchase_history=all_user_purchases)
 
 @bp.route('/purchaseid', methods=['GET', 'POST'])
-def purchaseDetails(purchaseid=None):
+def purchaseDetails(purchaseid):
     if current_user.is_authenticated:
         purchase_specifics = PurchaseDetail.get_by_purchaseid(purchaseid)
     return render_template('purchase_detailed.html', 

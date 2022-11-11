@@ -37,8 +37,8 @@ CREATE TABLE Purchases (
 );
 
 CREATE TABLE PurchasesDetails (
-    purch_id INT NOT NULL REFERENCES Purchases(id),
-    total_amount FLOAT NOT NULL,
+    purch_id INT NOT NULL REFERENCES Purchases(id), 
+    total_amount INT NOT NULL,
     no_of_items INT NOT NULL
 );
 
