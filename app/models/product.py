@@ -89,6 +89,12 @@ WHERE name LIKE :search
                               search=search)
         return [Product(*row) for row in rows]
 
+    
+
+
+   
+            
+
 
 
 
