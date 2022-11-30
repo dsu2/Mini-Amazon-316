@@ -69,5 +69,4 @@ def index():
     '''
     # render the page by adding information to the index.html file
     return render_template('index.html',
-                           purchase_history=purchases,
-                           cform = cform, iform = iform, user_cart = cart, user_inventory = inv, pform = pform, user_purchases = purch)
+                           cform = cform, iform = iform, user_cart = cart, user_inventory = inv)

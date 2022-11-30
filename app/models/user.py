@@ -112,3 +112,13 @@ WHERE id = :id
             # the following simply prints the error to the console:
             print(str(e))
             return e  
+
+    @staticmethod
+    def getSid(id):
+        rows = app.db.execute("""
+SELECT id, uid
+FROM Sellers
+WHERE uid = :id
+""",
+                              id=id)
+        return User(*(rows[0])) if rows else None

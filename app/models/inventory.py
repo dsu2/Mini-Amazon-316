@@ -60,3 +60,16 @@ WHERE pid =:pid
 ''',
                               pid=pid)
         return
+
+    @staticmethod
+    def addInventory(sid, pid, invNum):
+        try:
+            rows = app.db.execute("""
+INSERT INTO Inventory(sid, pid, invNum)
+VALUES(:sid, :pid, :invNum)
+RETURNING pid
+""",
+                            sid=sid, pid=pid, invNum=invNum)
+        except Exception as e:
+            print(str(e))
+            return e

@@ -4,8 +4,8 @@ from flask_login import current_user
 import datetime
 import sys
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField
-from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, AnyOf, Length
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField, SelectField, DecimalField
+from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange, AnyOf, Length, URL
 
 from .models.product import Product
 from .models.purchase import Purchase
@@ -13,6 +13,7 @@ from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.inventory import Inventory
 from .models.productDetails import ProductDetails
+from .models.seller import Seller
 
 from flask import Blueprint
 bp = Blueprint('products', __name__)
@@ -29,6 +30,7 @@ class SearchForm(FlaskForm):
     search = StringField('Search products by name', validators=[DataRequired(), Length(min=1, max=150)])
     submit = SubmitField('Search')
 
+
 class ReviewForm(FlaskForm):
     text = StringField('Text for review', validators = [DataRequired()])
     val = IntegerField('Rating from 1-10', validators=[DataRequired(), NumberRange(min=1, max =10)])
@@ -42,23 +44,45 @@ class EditForm(FlaskForm):
 class RemoveForm(FlaskForm):
     submit = SubmitField('Remove Review')
 
+class NewProductForm(FlaskForm):
+    name = StringField("Name", validators = [DataRequired(), Length(min=2, max=1000)])
+    price = DecimalField("Price", places=2, validators=[DataRequired(), NumberRange(min=.01, max = 1000000)])   
+    category = SelectField("Category", validators=[DataRequired()], choices=['Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf'])
+    des = StringField("Description", validators = [DataRequired(), Length(min=10, max=10000)])
+    image = StringField("Image URL", validators=[DataRequired(), URL()])
+    inventoryNum = IntegerField("Amount of product", validators=[DataRequired(), NumberRange(min=0, max = 100000)])
+    submit = SubmitField('Post product')
+
 
 @bp.route('/shelf', methods=['GET', 'POST'])
 def shelf():
-    # get all available products for sale:
+    
+   
+   
     form = ExpensiveForm()
+    products = Product.get_all(True)
     if form.validate_on_submit():
+        top_x = form.k.data
         products = Product.get_expensive_k(True,form.k.data)
     else:
-        products = Product.get_all(True)  
+        top_x = None
+        
 
     categoryForm = CategoryForm()
     if categoryForm.validate_on_submit():
+        category = categoryForm.category.data
         products = Product.get_category(True, categoryForm.category.data)
+    else:
+        category = None
 
     searchForm = SearchForm()
     if searchForm.validate_on_submit():
+        search_data = searchForm.search.data
         products = Product.get_search(True, searchForm.search.data)
+    else: 
+        search_data = None
+
+    '''products = Product.get_product_list(top_x, category, search_data)'''
     
     return render_template('products.html',
                            avail_products=products,
@@ -191,3 +215,18 @@ def editReview(productid = None):
 
     return render_template('edit_review.html', editform = editform, removeform = removeform, productid = productid)
 
+@bp.route('/shelf/addProduct', methods=['GET', 'POST'])
+def addProduct():
+    userid = current_user.get_id()
+    sid = Seller.get_sid(current_user.id)
+
+    newForm = NewProductForm()
+    if newForm.validate_on_submit():
+        new_pid = ProductDetails.addProduct(newForm.name.data, newForm.price.data, newForm.category.data, True, newForm.des.data, newForm.image.data)
+        if new_pid:
+            Inventory.addInventory(sid, new_pid, newForm.inventoryNum.data)
+
+    if sid is None:
+        return render_template('sellerSignUp.html')
+    else:
+        return render_template('postProduct.html', newForm=newForm)

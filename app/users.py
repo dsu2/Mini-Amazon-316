@@ -8,6 +8,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 import sys
 
 from .models.user import User
+from .models.seller import Seller
 
 
 from flask import Blueprint
@@ -143,3 +144,11 @@ def register():
 def logout():
     logout_user()
     return redirect(url_for('index.index'))
+
+@bp.route('/register-seller')
+def registerSeller():
+    if current_user.is_authenticated:
+        user_info = User.get(current_user.id)
+    Seller.registerSeller(current_user.id)
+    return render_template('profile.html', user_info=user_info)
+
