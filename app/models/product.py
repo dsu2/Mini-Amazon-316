@@ -96,29 +96,31 @@ WHERE name LIKE :search
                 FROM Products
                 '''
 
-        if category is not None or search is not None:
-            base = base+" WHERE "
+        if category != "" or search != "":
+            if category != 'All Categories':
+                base = base+" WHERE "
 
-        if category is not None:
+        if category != "":
             if category != 'All Categories':
                 part1 = f"category LIKE '{category}'"
                 base = base+part1
+            
                     
 
-        if search is not None:
-            if category is not None and category != 'All Categories':
+        if search != "":
+            if category != "" and category != 'All Categories':
                 base = base+" AND " 
             search = '%'+search+'%'
             part2 = f"name LIKE '{search}'"
             base=base+part2
 
-        if byPrice == 'High to low':
+        if byPrice == 'HightoLow':
             base = base+" ORDER BY price DESC "
         
-        if byPrice == 'Low to High':
+        if byPrice == 'LowtoHigh':
             base = base+" ORDER BY price ASC "
         
-        if k is not None:
+        if k != "":
             part3 = f"LIMIT {k}"
             base=base+part3
         

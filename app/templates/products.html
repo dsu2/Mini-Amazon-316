@@ -62,26 +62,9 @@
   </p>
 </form> 
 
+{{ pagination.info }}
+{{ pagination.links }}
 <br>
-
-<form action="" method="post">
-  {{ pageForm.hidden_tag() }}
-  <p>
-    {{pageForm.pageNum.label}}
-    {{pageForm.pageNum(type="number", min="1", max="1000")}}
-
-    {{pageForm.perPage.label}}
-    {{pageForm.perPage(type="number", min="1", max="100")}}
-
-    {{ pageForm.submit(class_="btn btn-black") }}
-  </p>
-</form> 
-
-<p>
-<h3>Displaying products {{leftSlice}}-{{rightSlice}} out of {{numProducts}}</h3>
-</p>
-<br><br>
-
 
 <h2>Products for sale:</h2>
 <table class='table table-hover table-bordered container'>
