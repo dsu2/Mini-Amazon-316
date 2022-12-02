@@ -26,7 +26,6 @@ WHERE id = :id
 SELECT id, name, price, category, available
 FROM Products
 WHERE available = :available
-LIMIT 100
 ''',
                               available=available)
         return [Product(*row) for row in rows]

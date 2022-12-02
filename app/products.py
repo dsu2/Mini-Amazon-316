@@ -25,6 +25,11 @@ class SearchForm(FlaskForm):
     byPrice = SelectField('Sort by Price', validators=[Optional()], choices=['None', 'Low to High', 'High to low'])
     submit = SubmitField('Search')
 
+class PageForm(FlaskForm):
+    pageNum = IntegerField('Page number:', validators=[Optional(), NumberRange(min=1, max=1000)])
+    perPage = IntegerField('Products per page:', validators=[Optional(), NumberRange(min=1, max =100)])
+    submit = SubmitField("Go")
+    
 
 class ReviewForm(FlaskForm):
     text = StringField('Text for review', validators = [DataRequired()])
@@ -51,18 +56,40 @@ class NewProductForm(FlaskForm):
 
 @bp.route('/shelf', methods=['GET', 'POST'])
 def shelf():
-    
+    pageForm = PageForm()
     form = SearchForm()
     if form.validate_on_submit():
         products = Product.get_product_list(True, form.k.data, form.category.data, form.search.data, form.byPrice.data)
     else:
         products = Product.get_all(True)
-
+        
+    
     numProducts = len(products)
+
+    if pageForm.validate_on_submit():
+        page = pageForm.pageNum.data
+        perPage= pageForm.perPage.data
+        leftSlice = ((page-1)*perPage)
+        rightSlice = page*perPage
+        if leftSlice >= numProducts or rightSlice >= numProducts:
+            products = products[-1*perPage:]
+        else:
+            products = products[leftSlice:rightSlice]
+        if leftSlice >= numProducts:
+            leftSlice = numProducts-perPage
+        if rightSlice >= numProducts:
+            rightSlice = numProducts
+    else:
+         products = products[0:100]
+         leftSlice = 0
+         rightSlice = 100
+
+    onPage = len(products)
+    
     
     return render_template('products.html',
                            avail_products=products,
-                           form=form, numProducts=numProducts)
+                           form=form, numProducts=numProducts, pageForm=pageForm, leftSlice=leftSlice, rightSlice=rightSlice)
 
 @bp.route('/pid/<int:productid>/', methods=['GET', 'POST'])
 def productDetails(productid=None):
