@@ -55,31 +55,15 @@
     {{ form.category.label }}
     {{ form.category(type="select") }}
 
+    {{ form.byPrice.label }}
+    {{ form.byPrice(type="select") }}
+
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
-
-
-
-
-  
-
-
-<br>
-
-<ul>
-  <li>
-    <form action="{{ url_for('products.high2low') }}">
-      <input type="submit" value="High to Low" />
-    </form>
-  </li>
-  <li>
-    <form action="{{ url_for('products.low2high') }}">
-      <input type="submit" value="Low to High"/>
-    </form>
-  </li>
-</ul>
-
+<p>
+<h3>Displaying {{numProducts }} products</h3>
+</p>
 <br><br>
 
 
