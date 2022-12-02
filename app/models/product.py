@@ -26,7 +26,6 @@ WHERE id = :id
 SELECT id, name, price, category, available
 FROM Products
 WHERE available = :available
-LIMIT 50
 ''',
                               available=available)
         return [Product(*row) for row in rows]
@@ -91,7 +90,7 @@ WHERE name LIKE :search
 
 
     @staticmethod
-    def get_product_list(available, k, category, search):
+    def get_product_list(available, k, category, search, byPrice):
         base = '''
                 SELECT id, name, price, category, available
                 FROM Products
@@ -112,11 +111,19 @@ WHERE name LIKE :search
             search = '%'+search+'%'
             part2 = f"name LIKE '{search}'"
             base=base+part2
+
+        if byPrice == 'High to low':
+            base = base+" ORDER BY price DESC "
+        
+        if byPrice == 'Low to High':
+            base = base+" ORDER BY price ASC "
         
         if k is not None:
-            part3 = f"ORDER BY price DESC LIMIT {k}"
+            part3 = f"LIMIT {k}"
             base=base+part3
         
+
+
         rows = app.db.execute(base)
         return [Product(*row) for row in rows]   
     

@@ -19,11 +19,17 @@ from flask import Blueprint
 bp = Blueprint('products', __name__)
 
 class SearchForm(FlaskForm):
-    k = IntegerField('Priciest number', validators=[Optional(), NumberRange(min=1, max =300)])
+    k = IntegerField('Number of products', validators=[Optional(), NumberRange(min=1, max =1000)])
     category = SelectField('Category', validators=[Optional()], choices=['All Categories','Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf'])
     search = StringField('Search products by name', validators=[Optional(), Length(min=1, max=150)])
+    byPrice = SelectField('Sort by Price', validators=[Optional()], choices=['None', 'Low to High', 'High to low'])
     submit = SubmitField('Search')
 
+class PageForm(FlaskForm):
+    pageNum = IntegerField('Page number:', validators=[Optional(), NumberRange(min=1, max=1000)])
+    perPage = IntegerField('Products per page:', validators=[Optional(), NumberRange(min=1, max =100)])
+    submit = SubmitField("Go")
+    
 
 class ReviewForm(FlaskForm):
     text = StringField('Text for review', validators = [DataRequired()])
@@ -50,44 +56,40 @@ class NewProductForm(FlaskForm):
 
 @bp.route('/shelf', methods=['GET', 'POST'])
 def shelf():
-    
-   
+    pageForm = PageForm()
     form = SearchForm()
     if form.validate_on_submit():
-        products = Product.get_product_list(True, form.k.data, form.category.data, form.search.data)
+        products = Product.get_product_list(True, form.k.data, form.category.data, form.search.data, form.byPrice.data)
     else:
         products = Product.get_all(True)
+        
+    
+    numProducts = len(products)
+
+    if pageForm.validate_on_submit():
+        page = pageForm.pageNum.data
+        perPage= pageForm.perPage.data
+        leftSlice = ((page-1)*perPage)
+        rightSlice = page*perPage
+        if leftSlice >= numProducts or rightSlice >= numProducts:
+            products = products[-1*perPage:]
+        else:
+            products = products[leftSlice:rightSlice]
+        if leftSlice >= numProducts:
+            leftSlice = numProducts-perPage
+        if rightSlice >= numProducts:
+            rightSlice = numProducts
+    else:
+         products = products[0:100]
+         leftSlice = 0
+         rightSlice = 100
+
+    onPage = len(products)
+    
     
     return render_template('products.html',
                            avail_products=products,
-                           form=form)
-
-@bp.route('/shelf/high2low', methods=['GET', 'POST'])
-def high2low():
-    # get all available products for sale:
-    products = Product.get_most_expensive(True)
-
-    form = SearchForm()
-    if form.validate_on_submit():
-        products = Product.get_product_list(True, form.k.data, form.category.data, form.search.data)
-    
-    return render_template('products.html',
-                           avail_products=products,
-                           form=form)
-
-@bp.route('/shelf/low2high', methods=['GET', 'POST'])
-def low2high():
-    # get all available products for sale:
-    products = Product.get_least_expensive(True)
-
-    form = SearchForm() 
-    if form.validate_on_submit():
-        products = Product.get_product_list(True, form.k.data, form.category.data, form.search.data)
-
-    
-    return render_template('products.html',
-                           avail_products=products,
-                           form=form)
+                           form=form, numProducts=numProducts, pageForm=pageForm, leftSlice=leftSlice, rightSlice=rightSlice)
 
 @bp.route('/pid/<int:productid>/', methods=['GET', 'POST'])
 def productDetails(productid=None):

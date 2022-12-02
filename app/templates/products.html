@@ -55,31 +55,31 @@
     {{ form.category.label }}
     {{ form.category(type="select") }}
 
+    {{ form.byPrice.label }}
+    {{ form.byPrice(type="select") }}
+
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
 
-
-
-
-  
-
-
 <br>
 
-<ul>
-  <li>
-    <form action="{{ url_for('products.high2low') }}">
-      <input type="submit" value="High to Low" />
-    </form>
-  </li>
-  <li>
-    <form action="{{ url_for('products.low2high') }}">
-      <input type="submit" value="Low to High"/>
-    </form>
-  </li>
-</ul>
+<form action="" method="post">
+  {{ pageForm.hidden_tag() }}
+  <p>
+    {{pageForm.pageNum.label}}
+    {{pageForm.pageNum(type="number", min="1", max="1000")}}
 
+    {{pageForm.perPage.label}}
+    {{pageForm.perPage(type="number", min="1", max="100")}}
+
+    {{ pageForm.submit(class_="btn btn-black") }}
+  </p>
+</form> 
+
+<p>
+<h3>Displaying products {{leftSlice}}-{{rightSlice}} out of {{numProducts}}</h3>
+</p>
 <br><br>
 
 
