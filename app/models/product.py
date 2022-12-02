@@ -89,6 +89,36 @@ WHERE name LIKE :search
                               search=search)
         return [Product(*row) for row in rows]
 
+
+    @staticmethod
+    def get_product_list(available, k, category, search):
+        base = '''
+                SELECT id, name, price, category, available
+                FROM Products
+                '''
+
+        if category is not None or search is not None:
+            base = base+" WHERE "
+
+        if category is not None:
+            if category != 'All Categories':
+                part1 = f"category LIKE '{category}'"
+                base = base+part1
+                    
+
+        if search is not None:
+            if category is not None and category != 'All Categories':
+                base = base+" AND " 
+            search = '%'+search+'%'
+            part2 = f"name LIKE '{search}'"
+            base=base+part2
+        
+        if k is not None:
+            part3 = f"ORDER BY price DESC LIMIT {k}"
+            base=base+part3
+        
+        rows = app.db.execute(base)
+        return [Product(*row) for row in rows]   
     
 
 

@@ -48,28 +48,20 @@
   <p>
     {{ form.k.label }}
     {{ form.k(type="number", min="1", max="300") }}
+
+    {{ form.search.label}}
+    {{ form.search(type="string")}}
+
+    {{ form.category.label }}
+    {{ form.category(type="select") }}
+
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
 
-</form>
-<form action="" method="post">
-  {{form.hidden_tag()}}
-  <p>
-    {{searchForm.search.label}}
-    {{searchForm.search(type="string")}}
-    {{searchForm.submit(class_="btn btn-black")}}
-  </p>
-</form>
 
-<form action="" method="post">
-  {{ categoryForm.hidden_tag() }}
-  <p>
-    {{ categoryForm.category.label }}
-    {{ categoryForm.category(type="select") }}
-    {{ categoryForm.submit(class_="btn btn-black") }}
-  </p>
-</form> 
+
+
   
 
 
