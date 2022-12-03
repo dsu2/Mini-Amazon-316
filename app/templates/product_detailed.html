@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+
 <style>
   ul {
     list-style-type: none;
@@ -8,34 +9,63 @@
     padding: 0;
     background-color: #242424;
     position: sticky;
-    top:0;
+    top: 0;
   }
+
   li {
     float: left;
   }
+
   li a {
     display: inline-block;
     color: aliceblue;
     text-align: left;
     padding: 14px 16px;
   }
+
   li a:hover {
     background-color: #1ccf00;
   }
+
   .active {
     background-color: #118100;
   }
 </style>
 
+
+<br>
 <nav class = "navbar">
   <ul>
     <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
+    <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
+    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
   </ul>
 </nav>
 
+
+<br>
+<div style="display:flex; width:fit-content;">
+  <b style="font-size:250%; background-color:#242424; color:aliceblue; padding:10px;">{{product.name}}</b>
+  <p style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">{{product.price}}</p>
+</div>
+<br>
+<div style="display:inline-flex; width:fit-content;">
+  <section class="image" style="padding-left: 20px;">
+    <img src={{product.image}} alt="Product Image" align="left">
+  </section>
+  <p style="padding-left: 10px;">
+    <b>Description:</b><br>
+    {{product.des}}
+  </p>
+</div>
+
+
+
 <form action="" method="post">
   {{ form.hidden_tag() }}
+  <br><br>
   <p>
     {{ form.text.label }}
     {{ form.text(type = "string") }}
@@ -44,8 +74,9 @@
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
+
 <h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
-<br><br>
+
 <h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -76,10 +107,30 @@
     {% endfor %}
   </tbody>
 </table>
-<section>
-
-</section>
 <br>
+<p><h3 style="color: red;">{{error}}</p>
+<h2>Reviews:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Inventory Quantity</th>
+      <th scope="col">Add</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for seller in sellers%}
+      <tr>
+        <th scope="row" style="color:#242424">{{seller.sid}}</th>
+        <td style="color:#242424">{{seller.invNum}}</td>
+        <td>
+          <a href= "{{ url_for('products.productDetails', productid=product.id, sellerid=seller.sid) }}" class="btn btn-primary">Add to Cart</a> 
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
 
 
 

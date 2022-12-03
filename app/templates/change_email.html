@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h1>Change Email Address</h1>
+<form action="" method="post">
+    {{ eForm.hidden_tag() }}
+    <p>
+        {{ eForm.new_email.label }}<br />
+        {{ eForm.new_email(size=32) }}<br />
+        {% for error in eForm.new_email.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ eForm.submit() }}</p>
+</form>
+
+{% endblock %}

@@ -8,43 +8,38 @@
     padding: 0;
     background-color: #242424;
     position: sticky;
-    top: 0;
+    top:0;
   }
-
   li {
     float: left;
   }
-
   li a {
     display: inline-block;
     color: aliceblue;
     text-align: left;
     padding: 14px 16px;
   }
-
   li a:hover {
     background-color: #1ccf00;
   }
-
   .active {
     background-color: #118100;
   }
 </style>
 
-<br>
-<nav class="navbar">
+<nav class = "navbar">
   <ul>
-    <li><a class="active" href="{{url_for('index.index')}}">Home</a></li>
+    <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
     <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
     <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
-    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
+    <li><a class="active" href="{{ url_for('inventory.prod') }}">Inventory</a></li>
   </ul>
 </nav>
 
-
-<br
-
+<br><br>
+<a href="{{url_for('products.addProduct')}}">Post a product</a>
+<br><br>
 
 <br><br>
 <form action="" method="post">
@@ -66,54 +61,22 @@
       <th scope="col">User/Seller ID</th>
       <th scope="col">Product ID</th>
       <th scope="col">Num Items</th>
+        <th scope="col">Modify</th>
     </tr>
   </thead>
   <tbody>
     {% for inv in user_inventory%}
-    <tr>
-      <th scope="row">{{inv.sid}}</th>
-      <td>{{inv.pid}}</td>
-      <td>{{inv.invNum}}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
-
-
-<br><br>
-<form action="" method="post">
-  {{ cform.hidden_tag() }}
-  <p>
-    {{ cform.uid.label }}
-    {{ cform.uid(type="number", min="0", max="10000") }}
-    {{ cform.submit(class_="btn btn-black") }}
-  </p>
-
+      <tr>
+        <th scope="row">{{inv.sid}}</th>
+        <td>{{inv.pid}}</td>
+        <td>{{inv.invNum}}</td>
+      <td>
+        <form method="post" action="{{ url_for('inventory.remove',pid=inv.pid) }}">
+  <button type="submit">Delete</button>
 </form>
-
-<br>
-
-<h2>Cart:</h2>
-<table class='table table-hover table-bordered container'>
-  <thead class="thead-dark">
-    <tr>
-      <th scope="col">User ID</th>
-      <th scope="col">Product ID</th>
-      <th scope="col">Seller ID</th>
-      <th scope="col">Amount of Item</th>
-
-    </tr>
-  </thead>
-  <tbody>
-    {% for cart in user_cart%}
-    <tr>
-      <th scope="row">{{cart.uid}}</th>
-      <td>{{cart.pid}}</td>
-      <td>{{cart.sid}}</td>
-      <td>{{cart.num_item}}</td>
-    </tr>
+      </td>
+      </tr>
     {% endfor %}
   </tbody>
 </table>
-
 {% endblock %}

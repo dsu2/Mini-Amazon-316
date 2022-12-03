@@ -8,30 +8,37 @@
     padding: 0;
     background-color: #242424;
     position: sticky;
-    top:0;
+    top: 0;
   }
+
   li {
     float: left;
   }
+
   li a {
     display: inline-block;
     color: aliceblue;
     text-align: left;
     padding: 14px 16px;
   }
+
   li a:hover {
     background-color: #1ccf00;
   }
+
   .active {
     background-color: #118100;
   }
-
 </style>
 <br>
-<nav class = "navbar">
+<nav class="navbar">
   <ul>
     <li><a href="{{url_for('index.index')}}">Home</a></li>
     <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
+    <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
+    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
+    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
+
   </ul>
 </nav>
 
@@ -41,11 +48,22 @@
   <p>
     {{ form.k.label }}
     {{ form.k(type="number", min="1", max="300") }}
+
+    {{ form.search.label}}
+    {{ form.search(type="string")}}
+
+    {{ form.category.label }}
+    {{ form.category(type="select") }}
+
+    {{ form.byPrice.label }}
+    {{ form.byPrice(type="select") }}
+
     {{ form.submit(class_="btn btn-black") }}
   </p>
-
 </form> 
 
+{{ pagination.info }}
+{{ pagination.links }}
 <br>
 
 <h2>Products for sale:</h2>
@@ -61,15 +79,15 @@
   </thead>
   <tbody>
     {% for product in avail_products%}
-      <tr>
-        <th scope="row">{{product.id}}</th>
-        <td>{{product.name}}</td>
-        <td>{{product.price}}</td>
-        <td>{{product.category}}</td>
-        <td>  
-          <a href= "{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Details</a>                
-        </td>
-      </tr>
+    <tr>
+      <th scope="row">{{product.id}}</th>
+      <td>{{product.name}}</td>
+      <td>{{product.price}}</td>
+      <td>{{product.category}}</td>
+      <td>
+        <a href="{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Details</a>
+      </td>
+    </tr>
     {% endfor %}
   </tbody>
 </table>

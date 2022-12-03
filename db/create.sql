@@ -14,11 +14,7 @@ CREATE TABLE Products (
     name VARCHAR(255) UNIQUE NOT NULL,
     price DECIMAL(12,2) NOT NULL,
     category VARCHAR(255) NOT NULL,
-    available BOOLEAN DEFAULT TRUE
-);
-
-CREATE TABLE ProductDetails (
-    pid INT NOT NULL REFERENCES Products(id),
+    available BOOLEAN DEFAULT TRUE,
     des VARCHAR(2000) NOT NULL,
     image VARCHAR(2083) NOT NULL
 );
@@ -34,6 +30,12 @@ CREATE TABLE Purchases (
     pid INT NOT NULL REFERENCES Products(id),
     time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     sid INT NOT NULL REFERENCES Sellers(id)
+);
+
+CREATE TABLE PurchasesDetails (
+    purch_id INT NOT NULL REFERENCES Purchases(id),
+    total_amount FLOAT NOT NULL,
+    no_of_items INT NOT NULL
 );
 
 CREATE TABLE Inventory (
