@@ -21,6 +21,16 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
+    def get_by_name(name):
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE name = :name
+''',
+                              name=name)
+        return rows[0][0] if rows is not None else None
+
+    @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
 SELECT id, name, price, category, available
@@ -99,6 +109,9 @@ WHERE name LIKE :search
         if category != "" or search != "":
             if category != 'All Categories':
                 base = base+" WHERE "
+            elif search !="":
+                    base=base+ " WHERE "
+            
 
         if category != "":
             if category != 'All Categories':
