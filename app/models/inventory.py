@@ -12,13 +12,13 @@ class Inventory:
         self.invNum = invNum
 
     @staticmethod
-    def get_by_pid(id):
+    def get_by_pid(pid):
         rows = app.db.execute('''
 SELECT sid, pid, invNum
 FROM Inventory
-WHERE pid = :id
+WHERE pid = :pid
 ''',
-                              id=id)
+                              pid=pid)
         return [Inventory(*row) for row in rows]
 
     @staticmethod
@@ -70,6 +70,7 @@ VALUES(:sid, :pid, :invNum)
 RETURNING pid
 """,
                             sid=sid, pid=pid, invNum=invNum)
+            return pid
         except Exception as e:
             print(str(e))
-            return e
+            return None

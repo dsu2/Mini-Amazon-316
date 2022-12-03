@@ -89,6 +89,25 @@
     </p>
     <p>{{ newForm.submit() }}</p>
 </form>
+<br>
+<h3 style="color: red;">{{error}}</p>
+<br>
+
+<h1>Sell existing product</h1>
+
+<form action="" method="post">
+  {{ oldForm.hidden_tag() }}
+  <p>
+      {{ oldForm.name2.label }}
+      {{ oldForm.name2(type="string") }}<br />
+  </p>
+  <p>
+      {{ oldForm.inventoryNum2.label }}
+      {{ oldForm.inventoryNum2(type="number", min="0", max="100000") }}<br />
+  </p>
+  <p>{{ oldForm.submit2() }}</p>
+</form>
+
 <br><br>
 
 

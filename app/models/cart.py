@@ -10,6 +10,20 @@ class Cart:
         self.price = price
 
     @staticmethod
+    def addToCart(uid, pid, sid, num_items):
+        try:
+            rows = app.db.execute('''
+                                INSERT INTO Line_item(uid, pid, sid, num_item)
+                                VALUES(:uid, :pid, :sid, :num_items)
+                                RETURNING uid
+                                ''', uid=uid, pid=pid, sid=sid, num_items=num_items)
+            uid = rows[0][0]
+            return uid
+        except Exception as e:
+            print(str(e))
+            return None
+
+    @staticmethod
     def get(id):
         rows = app.db.execute('''
 SELECT id, uid, pid, time_added_to_cart

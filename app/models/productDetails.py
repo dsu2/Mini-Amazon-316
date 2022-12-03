@@ -34,4 +34,4 @@ RETURNING id
             return id
         except Exception as e:
             print(str(e))
-            return e
+            return None
