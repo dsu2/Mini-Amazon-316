@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+</b>Current Account Balance: $</b>  {{currentbal}} 
+<br><br>
+<h1>Add amount in</h1>
+<form action="" method="post">
+    {{ eForm.hidden_tag() }}
+    <p>
+        {{ eForm.new_value.label }}<br />
+        {{ eForm.new_value(size=32) }}<br />
+        {% for error in eForm.new_value.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ eForm.submit() }}</p>
+</form>
+
+{% endblock %}

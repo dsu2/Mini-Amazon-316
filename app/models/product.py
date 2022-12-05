@@ -115,7 +115,7 @@ WHERE name LIKE :search
 
         if category != "":
             if category != 'All Categories':
-                part1 = f"category LIKE '{category}'"
+                part1 = f"category iLIKE '{category}'"
                 base = base+part1
             
                     
@@ -130,8 +130,11 @@ WHERE name LIKE :search
         if byPrice == 'HightoLow':
             base = base+" ORDER BY price DESC "
         
-        if byPrice == 'LowtoHigh':
+        elif byPrice == 'LowtoHigh':
             base = base+" ORDER BY price ASC "
+        
+        else:
+            base = base + " ORDER BY id ASC "
         
         if k != "":
             part3 = f"LIMIT {k}"

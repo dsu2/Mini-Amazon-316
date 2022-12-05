@@ -25,12 +25,14 @@
     {% if messages %}
     <ul>
       {% for message in messages %}
-      <li>{{ message }}</li>
+      <span style="color: red;">
+      <li>{{ message }}</li></span>
       {% endfor %}
     </ul>
     {% endif %}
     {% endwith %}
   </p>
+  <br>
   {{ form.submit(class_="btn btn-black") }}
   <a class="btn btn-secondary" href="{{ url_for('users.register') }}" role="button">Register</a>
 </form>

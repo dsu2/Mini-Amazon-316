@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br><br>
+<h1>Change Address</h1>
+<form action="" method="post">
+    {{ aForm.hidden_tag() }}
+    <p>
+        {{ aForm.new_address.label }}<br />
+        {{ aForm.new_address(size=32) }}<br />
+
+        {{ aForm.new_city.label }}<br />
+        {{ aForm.new_city(size=32) }}<br />
+
+        {{ aForm.new_state.label }}<br />
+        {{ aForm.new_state(size=32) }}<br />
+    </p>
+    <p>{{ aForm.submit() }}</p>
+</form>
+
+{% endblock %}
