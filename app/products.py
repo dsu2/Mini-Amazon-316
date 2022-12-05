@@ -80,7 +80,7 @@ def shelf():
     byPrice = request.args.get('byPrice','')
 
     products = Product.get_product_list(True, number, category, search, byPrice)    
-    pagination_products = products[offset:offset+per_page]
+    pagination_products = products[offset*5:offset*5+per_page]
 
     pagination = Pagination(page=page, total=len(products), record_name='products', per_page=per_page)
     
@@ -90,7 +90,12 @@ def shelf():
 
 @bp.route('/pid/<int:productid>/', methods=['GET', 'POST'])
 def productDetails(productid=None, sellerid=None):
+
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page=10
+
     error=''
+    errorReview = ''
     sellerid = request.args.get('sellerid','')
     print(productid, file=sys.stdout)
     print(sellerid, file=sys.stdout)
@@ -108,8 +113,10 @@ def productDetails(productid=None, sellerid=None):
     reviews = ProductReview.get_all_by_pid(productid)
     avgreview = ProductReview.findAvgRating(pid=productid)
     numreview = ProductReview.findNumReview(pid=productid)
-    
-    
+      
+    pagination_reviews = reviews[offset:offset+per_page]
+
+    pagination = Pagination(page=page, total=len(reviews), record_name='reviews', per_page=per_page)
 
     if avgreview==None:
         avgreview = None
@@ -119,14 +126,18 @@ def productDetails(productid=None, sellerid=None):
 
     form = ReviewForm()
     if form.validate_on_submit():
-        if current_user.get_id() != None:
+        if current_user.get_id() != None and ProductReview.get_uid_pid(uid=current_user.get_id(), pid = productid) != None:
             ProductReview.addProductReview(pid = productid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)  
             reviews = ProductReview.get_all_by_pid(productid)
+        elif current_user.get_id() != None and ProductReview.get(uid = current_user.get_id(), pid = productid) != None:
+            errorReview = "You already reviewed this product. Try editing your previous review instead!"
+        else:
+            errorReview = "You cannot review this product because you did not purchase it!"
     
     
        
 
-    return render_template('product_detailed.html', product= product, sellers=sellers, reviews = reviews, form = form, pid = productid, avgreview = avgreview, numreview =numreview, error=error)
+    return render_template('product_detailed.html', product= product, pagination=pagination, page=page, per_page=per_page, sellers=sellers, reviews = pagination_reviews, form = form, pid = productid, avgreview = avgreview, numreview =numreview, error=error, errorReview = errorReview)
 
  
 @bp.route('/pid/<int:productid>/editreview/', methods=['GET', 'POST'])

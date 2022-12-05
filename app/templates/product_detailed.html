@@ -2,49 +2,6 @@
 
 {% block content %}
 
-<style>
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: #242424;
-    position: sticky;
-    top: 0;
-  }
-
-  li {
-    float: left;
-  }
-
-  li a {
-    display: inline-block;
-    color: aliceblue;
-    text-align: left;
-    padding: 14px 16px;
-  }
-
-  li a:hover {
-    background-color: #1ccf00;
-  }
-
-  .active {
-    background-color: #118100;
-  }
-</style>
-
-
-<br>
-<nav class = "navbar">
-  <ul>
-    <li><a href="{{url_for('index.index')}}">Home</a></li>
-    <li><a class="active" href="{{ url_for('products.shelf') }}">Products</a></li>
-    <li><a href="{{ url_for('purchases.yourPurchases') }}">Your Purchases</a></li>
-    <li><a href="{{ url_for('cart.items') }}">User Cart</a></li>
-    <li><a href="{{ url_for('inventory.prod') }}">Inventory</a></li>
-  </ul>
-</nav>
-
-
 <br>
 <div style="display:flex; width:fit-content;">
   <b style="font-size:250%; background-color:#242424; color:aliceblue; padding:10px;">{{product.name}}</b>
@@ -62,7 +19,6 @@
 </div>
 
 
-
 <form action="" method="post">
   {{ form.hidden_tag() }}
   <br><br>
@@ -77,12 +33,15 @@
 
 <h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
 
+{{ pagination.info }}
+{{ pagination.links }}
+<p><h3 style="color: red;">{{errorReview}}</p>
 <h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">User ID</th>
       <th scope="col">Product ID</th>
+      <th scope="col">User ID</th>
       <th scope="col">Review Time</th>
       <th scope="col">Text</th>
       <th scope="col">Rating</th>
@@ -93,8 +52,8 @@
   <tbody>
     {% for review in reviews%}
       <tr>
-        <th scope="row">{{review.pid}}</th>
-        <td>{{review.uid}}</td>
+        <td>{{review.pid}}</td>
+        <td><a href = "{{ url_for('users.publicprofile', userid =review.uid) }}"> {{review.uid}}</a></td>
         <td>{{review.time_purchased}}</td>
         <td>{{review.text}}</td>
         <td>{{review.rating}}</td>
@@ -109,19 +68,17 @@
 </table>
 <br>
 <p><h3 style="color: red;">{{error}}</p>
-<h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-      <th scope="col">Seller ID</th>
       <th scope="col">Inventory Quantity</th>
-      <th scope="col">Add</th>
+      <th scope="col">Add to cart?</th>
     </tr>
   </thead>
   <tbody>
     {% for seller in sellers%}
       <tr>
-        <th scope="row" style="color:#242424">{{seller.sid}}</th>
+        <!--- <th scope="row" style="color:#242424">{{seller.sid}}</th> -->
         <td style="color:#242424">{{seller.invNum}}</td>
         <td>
           <a href= "{{ url_for('products.productDetails', productid=product.id, sellerid=seller.sid) }}" class="btn btn-primary">Add to Cart</a> 

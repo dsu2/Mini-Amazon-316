@@ -28,7 +28,12 @@ def gen_users(num_users):
             name_components = profile['name'].split(' ')
             firstname = name_components[0]
             lastname = name_components[-1]
-            writer.writerow([uid, email, password, firstname, lastname])
+            wholeadd = fake.address().split("\n")
+            address = wholeadd[0]
+            city = wholeadd[1].split(',')[0]
+            state = fake.state()
+            value = f'{str(fake.random_int(max=500000))}.{fake.random_int(max=99):02}'
+            writer.writerow([uid, email, password, firstname, lastname, address, city, state, value])
         print(f'{num_users} generated')
     return
 
@@ -66,7 +71,7 @@ def gen_sellers():
         for sid in range(num_sellers):
             if sid % 10 == 0:
                 print(f'{sid}', end=' ', flush=True)
-            uid = fake.unique.random_int(0, 99)
+            uid = fake.unique.random_int(0, num_users-1)
             writer.writerow([sid, uid])
             sids.append(sid)
         print(f'{num_sellers} generated')
@@ -149,7 +154,11 @@ def gen_purchases_details(num_purchases):
                 print(f'{id}', end=' ', flush=True)
             total_amt = fake.random_int(min=0.00, max=300.00)
             no_of_items = 1 
-            writer.writerow([id, total_amt, no_of_items])
+            if id%2 == 0:
+                fulfill = True
+            else:
+                fulfill = False
+            writer.writerow([id, total_amt, no_of_items, fulfill])
         print(f'{num_purchases} purchases details generated')
     return  
 
@@ -162,20 +171,19 @@ def gen_product_review():
             reader = csv.reader(purchases, dialect = 'unix')
             print('Product Reviews...', end = ' ', flush = True)
             for i in reader:
-                if(int(i[0]) %5 == 0):
-                    pid = i[2]
-                    uid = i[1]
-                    if(pid + " " + uid) in hasPidUid:
-                        continue
-                    else:
-                        hasPidUid.add(pid + " " + uid)
-                        text = fake.sentence(nb_words=100)[:-1]
-                        rating = fake.pyint(1, 10)
-                        pos = fake.pyint(0, 50)
-                        neg = fake.pyint(0, 50)
-                        time_purchased = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
-                        writer.writerow([pid, uid, text, rating, pos, neg, time_purchased])
-                        numreviews += 1
+                pid = i[2]
+                uid = i[1]
+                if(pid + " " + uid) in hasPidUid:
+                    continue
+                else:
+                    hasPidUid.add(pid + " " + uid)
+                    text = fake.sentence(nb_words=100)[:-1]
+                    rating = fake.pyint(1, 10)
+                    pos = fake.pyint(0, 50)
+                    neg = fake.pyint(0, 50)
+                    time_purchased = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
+                    writer.writerow([pid, uid, text, rating, pos, neg, time_purchased])
+                    numreviews += 1
             print(f'{numreviews} generated')
     return
 
@@ -200,8 +208,8 @@ def gen_seller_review():
                         pos = fake.pyint(0, 50)
                         neg = fake.pyint(0, 50)
                         rating = fake.pyint(1, 10)
-                        time_purchased = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
-                        writer.writerow([sid, uid, text, rating, pos, neg, time_purchased])
+                        time_written = fake.date_time_between(datetime.strptime(i[3], '%Y-%m-%d %H:%M:%S'), "now")
+                        writer.writerow([sid, uid, text, rating, pos, neg, time_written])
                         numreviews += 1
             print(f'{numreviews} generated')
     return   

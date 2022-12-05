@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<br>
+<div style="display:flex; width:fit-content;">
+  <b style="font-size:250%; background-color:#242424; color:aliceblue; padding:10px;">{{user_info.firstname}} {{user_info.lastname}}</b>
+  <br>
+  <p style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">User ID: {{user_info.id}}</p>
+</div>
+<br>
+
+{% if sellerid != None%}
+<div style="display:inline-flex; width:fit-content;">
+  <p style="padding-left: 10px;">
+    <b>Email:</b><br>
+    {{user_info.email}} <br>
+    <b>Address:</b><br>
+    {{user_info.address}} {{user_info.city}}, {{user_info.state}}<br>
+  </p>
+</div>
+
+<h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
+
+{{ sellerpagination.info}}
+{{ sellerpagination.links }}
+<p><h3 style="color: red;">{{errorReview}}</p>
+<h2>Reviews of this Seller:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+      <th scope="col">Rating</th>
+      <th scope="col"> </th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in sellerreviews%}
+      <tr>
+        <td><a href = "{{ url_for('users.publicprofile', userid =review.uid) }}"> {{review.uid}}</a></td>
+        <td>{{review.time_purchased}}</td>
+        <td>{{review.text}}</td>
+        <td>{{review.rating}}</td>
+        <td>  
+          {% if current_user.is_authenticated and review.uid|string == current_user.get_id()%}
+          <a href= "https://google.com" class="btn btn-primary">Edit Review</a>  
+          {% endif %}                
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
+{% endif %}
+{% endblock %}
+
+
+<br><br>
+

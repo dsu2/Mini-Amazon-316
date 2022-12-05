@@ -6,7 +6,11 @@ CREATE TABLE Users (
     email VARCHAR UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     firstname VARCHAR(255) NOT NULL,
-    lastname VARCHAR(255) NOT NULL
+    lastname VARCHAR(255) NOT NULL,
+    address VARCHAR(255) NOT NULL,
+    city VARCHAR(255) NOT NULL,
+    state VARCHAR(255) NOT NULL,
+    value DECIMAL(14,2) NOT NULL CHECK (value >= 0)
 );
 
 CREATE TABLE Products (
@@ -35,7 +39,8 @@ CREATE TABLE Purchases (
 CREATE TABLE PurchasesDetails (
     purch_id INT NOT NULL REFERENCES Purchases(id),
     total_amount FLOAT NOT NULL,
-    no_of_items INT NOT NULL
+    no_of_items INT NOT NULL,
+    fulfilled BOOLEAN NOT NULL
 );
 
 CREATE TABLE Inventory (
@@ -63,7 +68,7 @@ CREATE TABLE SellerReviews (
     rating INT NOT NULL,
     numPos INT NOT NULL,
     numNeg INT NOT NULL,
-    time_purchased timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
+    time_written timestamp without time zone NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC'),
     PRIMARY KEY (sid, uid)
 );
 

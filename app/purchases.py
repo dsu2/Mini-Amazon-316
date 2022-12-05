@@ -28,14 +28,14 @@ class PurForm(FlaskForm):
 def yourPurchases():
     if current_user.is_authenticated:
         all_user_purchases = Purchase.get_by_uid(current_user.id)
-    
+        
     else:
         all_user_purchases = None 
     
     return render_template('purchases.html',
                            purchase_history=all_user_purchases)
 
-@bp.route('/purchaseid', methods=['GET', 'POST'])
+@bp.route('/your-purchases/purchaseid', methods=['GET', 'POST'])
 def purchaseDetails(purchaseid=None):
     if current_user.is_authenticated:
         purchase_specifics = PurchaseDetail.get_by_purchaseid(purchaseid)
