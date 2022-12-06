@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<span style="color:blue;font-size:24px;">
+</b>Current Account Balance: $</b>  {{currentbal}} </span>
+<br><br>
+<h1>Withdraw amount:</h1>
+<form action="" method="post">
+    {{ eForm.hidden_tag() }}
+    <p>
+        {{ eForm.new_value(size=32) }}<br />
+        <span style="color: red;">{{ error }}</span>
+    </p>
+    <p>{{ eForm.submit() }}</p>
+</form>
+
+{% endblock %}

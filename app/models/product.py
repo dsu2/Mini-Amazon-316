@@ -21,12 +21,21 @@ WHERE id = :id
         return Product(*(rows[0])) if rows is not None else None
 
     @staticmethod
+    def get_by_name(name):
+        rows = app.db.execute('''
+SELECT id, name, price, category, available
+FROM Products
+WHERE name = :name
+''',
+                              name=name)
+        return rows[0][0] if rows is not None else None
+
+    @staticmethod
     def get_all(available=True):
         rows = app.db.execute('''
 SELECT id, name, price, category, available
 FROM Products
 WHERE available = :available
-LIMIT 50
 ''',
                               available=available)
         return [Product(*row) for row in rows]
@@ -88,6 +97,58 @@ WHERE name LIKE :search
                               available=available,
                               search=search)
         return [Product(*row) for row in rows]
+
+
+    @staticmethod
+    def get_product_list(available, k, category, search, byPrice):
+        base = '''
+                SELECT id, name, price, category, available
+                FROM Products
+                '''
+
+        if category != "" or search != "":
+            if category != 'All Categories':
+                base = base+" WHERE "
+            elif search !="":
+                    base=base+ " WHERE "
+            
+
+        if category != "":
+            if category != 'All Categories':
+                part1 = f"category iLIKE '{category}'"
+                base = base+part1
+            
+                    
+
+        if search != "":
+            if category != "" and category != 'All Categories':
+                base = base+" AND " 
+            search = '%'+search+'%'
+            part2 = f"name LIKE '{search}'"
+            base=base+part2
+
+        if byPrice == 'HightoLow':
+            base = base+" ORDER BY price DESC "
+        
+        elif byPrice == 'LowtoHigh':
+            base = base+" ORDER BY price ASC "
+        
+        else:
+            base = base + " ORDER BY id ASC "
+        
+        if k != "":
+            part3 = f"LIMIT {k}"
+            base=base+part3
+        
+
+
+        rows = app.db.execute(base)
+        return [Product(*row) for row in rows]   
+    
+
+
+   
+            
 
 
 

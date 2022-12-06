@@ -1,41 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
-<style>
-  ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    background-color: #242424;
-    position: sticky;
-    top:0;
-  }
-  li {
-    float: left;
-  }
-  li a {
-    display: inline-block;
-    color: aliceblue;
-    text-align: left;
-    padding: 14px 16px;
-  }
-  li a:hover {
-    background-color: #1ccf00;
-  }
-  .active {
-    background-color: #118100;
-  }
-</style>
 
-<nav class = "navbar">
-  <ul>
-    <li><a href="{{url_for('index.index')}}">Home</a></li>
-      <li><a href="{{ url_for('products.shelf') }}">Products</a></li>
-    <li><a class="active" href="{{ url_for('cart.items') }}">User Cart</a></li>
-  </ul>
-</nav>
-
-<br><br>
 <form action="" method="post">
   {{ cform.hidden_tag() }}
   <p>

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if current_user.is_authenticated %}
+<h3>{{user_info.firstname}} {{user_info.lastname}} <a href="{{ url_for('users.editName', userid = user_info.id) }}"
+        type="button" class="btn btn-light">Edit Name</a> </h3>
+<br>
+<p> <b>Email:</b> {{user_info.email}} <a href="{{ url_for('users.editEmail',userid = user_info.id) }}" type="button"
+        class="btn btn-light">Change
+        Email</a></p>
+
+<p> <b>Address:</b> {{user_info.address}} <b>City: </b>{{user_info.city}} <b>State: </b>{{user_info.state}} <a href="{{ url_for('users.editAddress',userid = user_info.id) }}" type="button"
+        class="btn btn-light">Change Address</a></p>
+
+<p> <b>Balance: </b> ${{user_info.value}} <a href="{{ url_for('users.addMoney',userid = user_info.id) }}" type="button"
+        class="btn btn-light">Add money to your account</a> <a href="{{ url_for('users.withdrawMoney',userid = user_info.id) }}" type="button"
+        class="btn btn-light">Withdraw money from your account</a> </p>
+
+<a href="{{ url_for('users.editPassword', userid = user_info.id) }}" type="button" class="btn btn-light">Change
+    Password?</a>
+    
+
+<br>
+<br>
+<p> <b>User ID:</b> {{user_info.id}}</p>
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+
+{% endif %}
+
+{% endblock %}

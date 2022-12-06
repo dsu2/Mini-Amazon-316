@@ -1,12 +1,27 @@
 from flask import current_app as app
 
 class Cart:
-    def __init__(self, uid, pid, pname, sid, num_item):
+    def __init__(self, uid, pid, pname, sid, num_item, price):
         self.uid = uid
         self.pid = pid
         self.pname = pname
         self.sid = sid
         self.num_item = num_item
+        self.price = price
+
+    @staticmethod
+    def addToCart(uid, pid, sid, num_items):
+        try:
+            rows = app.db.execute('''
+                                INSERT INTO Line_item(uid, pid, sid, num_item)
+                                VALUES(:uid, :pid, :sid, :num_items)
+                                RETURNING uid
+                                ''', uid=uid, pid=pid, sid=sid, num_items=num_items)
+            uid = rows[0][0]
+            return uid
+        except Exception as e:
+            print(str(e))
+            return None
 
     @staticmethod
     def get(id):
@@ -34,10 +49,10 @@ ORDER BY time_added_to_cart DESC
     @staticmethod
     def get_cart(uid):
         rows = app.db.execute('''
-SELECT L.uid, L.pid, T2.name, L.sid, L.num_item
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
 FROM Line_item as L
 FULL OUTER JOIN
-(SELECT Products.id, Products.name 
+(SELECT Products.id, Products.name,Products.price
 FROM Products ) as T2
 ON L.pid = T2.id
 WHERE L.uid =:uid
@@ -49,10 +64,10 @@ LIMIT 50
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT L.uid, L.pid, T2.name, L.sid, L.num_item
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
 FROM Line_item as L
 JOIN
-(SELECT Products.id, Products.name 
+(SELECT Products.id, Products.name, Products.price
 FROM Products ) as T2
 ON L.pid = T2.id
 LIMIT 50
