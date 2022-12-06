@@ -1,13 +1,14 @@
 from flask import current_app as app
 
 class Cart:
-    def __init__(self, uid, pid, pname, sid, num_item, price):
+    def __init__(self, uid, pid, pname, sid, num_item, price, subtotal):
         self.uid = uid
         self.pid = pid
         self.pname = pname
         self.sid = sid
         self.num_item = num_item
         self.price = price
+        self.subtotal = subtotal
 
     @staticmethod
     def addToCart(uid, pid, sid, num_items):
@@ -49,7 +50,7 @@ ORDER BY time_added_to_cart DESC
     @staticmethod
     def get_cart(uid):
         rows = app.db.execute('''
-SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price, L.num_item*T2.price as subtotal
 FROM Line_item as L
 FULL OUTER JOIN
 (SELECT Products.id, Products.name,Products.price
@@ -64,7 +65,7 @@ LIMIT 50
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price
+SELECT L.uid, L.pid, T2.name, L.sid, L.num_item, T2.price, L.num_item*T2.price as subtotal
 FROM Line_item as L
 JOIN
 (SELECT Products.id, Products.name, Products.price
@@ -94,3 +95,4 @@ LIMIT 50
     ''',
                               pid=pid, num_item=num_item)
         return
+

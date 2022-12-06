@@ -2,23 +2,14 @@
 
 {% block content %}
 
-<form action="" method="post">
-  {{ cform.hidden_tag() }}
-  <p>
-    {{ cform.uid.label }}
-    {{ cform.uid(type="number", min="0", max="10000") }}
-    {{ cform.submit(class_="btn btn-black") }}
-  </p>
+{%  if current_user.is_authenticated %}
 
-</form>
-
-<br>
-
-<h2>Cart:</h2>
+<h2>Your Cart:</h2>
+    </h3>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
-        <th scope="col">User ID</th>
+
         <th scope="col">Product ID</th>
         <th scope="col">Product Name</th>
       <th scope="col">Seller ID</th>
@@ -33,7 +24,7 @@
   <tbody>
     {% for cart in user_cart%}
       <tr>
-      <td>{{cart.uid}}</td>
+
         <td>{{cart.pid}}</td>
           <td>{{cart.pname}}</td>
         <td>{{cart.sid}}</td>
@@ -43,8 +34,8 @@
               <input type="submit"></form>
           </td>
           <td>${{cart.price}}</td>
-          <td>{% set subtotal = cart.num_item * cart.price %}
-          ${{ subtotal }}</td>
+          <td>
+          ${{ cart.subtotal }}</td>
       <td>
         <form method="post" action="{{ url_for('cart.remove',pid=cart.pid) }}">
   <button type="submit">Delete</button>
@@ -54,8 +45,13 @@
     {% endfor %}
   </tbody>
 
-<h2>Cart Total:</h2>
+<h2>Cart Total: {{ total}}</h2>
 <br><br>
 
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in</a> to view your cart!</p>
+<h2>Cart Total: {{ total}}</h2>
+    <br><br>
+{% endif %}
 {% endblock %}
 
