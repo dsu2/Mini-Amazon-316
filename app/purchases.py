@@ -3,6 +3,7 @@ from sqlalchemy import false
 from werkzeug.urls import url_parse
 from flask_login import current_user
 import datetime
+import sys
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
@@ -35,10 +36,12 @@ def yourPurchases():
     return render_template('purchases.html',
                            purchase_history=all_user_purchases)
 
-@bp.route('/your-purchases/purchaseid', methods=['GET', 'POST'])
+@bp.route('/your-purchases/<int:purchaseid>', methods=['GET', 'POST'])
 def purchaseDetails(purchaseid=None):
     if current_user.is_authenticated:
-        purchase_specifics = PurchaseDetail.get_by_purchaseid(purchaseid)
+        purchase_specifics = PurchaseDetail.get_by_purchaseid(purch_id = purchaseid)[0]
+        print(purchase_specifics, file = sys.stdout)
+        print(purchase_specifics.purch_id, file = sys.stdout)
     return render_template('purchase_detailed.html', 
                         purchase_specifics = purchase_specifics)
 

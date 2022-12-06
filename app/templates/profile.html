@@ -5,7 +5,11 @@
 {% if current_user.is_authenticated %}
 <h3>{{user_info.firstname}} {{user_info.lastname}} <a href="{{ url_for('users.editName', userid = user_info.id) }}"
         type="button" class="btn btn-light">Edit Name</a> </h3>
-<br>
+        <br>
+        <img src= "{{user_info.image}}" alt = "testing" width = "200" height = "200"> <a href="{{ url_for('users.publicprofile',userid = user_info.id) }}" type="button"
+        class="btn btn-light">View public profile and past reviews</a>
+        <br><a href="{{ url_for('users.editImage',userid = user_info.id) }}" type="button"
+        class="btn btn-light">Edit profile picture</a>
 <p> <b>Email:</b> {{user_info.email}} <a href="{{ url_for('users.editEmail',userid = user_info.id) }}" type="button"
         class="btn btn-light">Change
         Email</a></p>

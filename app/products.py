@@ -107,6 +107,16 @@ def productDetails(productid=None, sellerid=None):
         else:
             error = "Success! Added to cart"
 
+    form = ReviewForm()
+    if form.validate_on_submit():
+        if current_user.get_id() != None and len(Purchase.get_by_uid_pid(uid=current_user.get_id(), pid = productid)) != 0:
+            result = ProductReview.addProductReview(pid = productid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)  
+            reviews = ProductReview.get_all_by_pid(productid)
+            if result == None:
+                errorReview = "You have reviewed this product."
+        else:
+            errorReview = "You cannot review this product because you did not purchase it!"
+    
     
     sellers = Inventory.get_by_pid(productid)
     product = ProductDetails.get_details(id=productid)
@@ -123,26 +133,12 @@ def productDetails(productid=None, sellerid=None):
     else:
         avgreview = round(avgreview, 3)
 
-
-    form = ReviewForm()
-    if form.validate_on_submit():
-        if current_user.get_id() != None and ProductReview.get_uid_pid(uid=current_user.get_id(), pid = productid) != None:
-            ProductReview.addProductReview(pid = productid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)  
-            reviews = ProductReview.get_all_by_pid(productid)
-        elif current_user.get_id() != None and ProductReview.get(uid = current_user.get_id(), pid = productid) != None:
-            errorReview = "You already reviewed this product. Try editing your previous review instead!"
-        else:
-            errorReview = "You cannot review this product because you did not purchase it!"
-    
-    
-       
-
-    return render_template('product_detailed.html', product= product, pagination=pagination, page=page, per_page=per_page, sellers=sellers, reviews = pagination_reviews, form = form, pid = productid, avgreview = avgreview, numreview =numreview, error=error, errorReview = errorReview)
+    return render_template('product_detailed.html', product= product, pagination=pagination, page=page, per_page=per_page, sellers=sellers, reviews = pagination_reviews, form = form, pid = productid, avgreview = avgreview, numreview =numreview, error=error, errorReview = errorReview, Seller = Seller)
 
  
 @bp.route('/pid/<int:productid>/editreview/', methods=['GET', 'POST'])
 def editReview(productid = None):
-    sellers = Inventory.get_by_pid(id=productid)
+    sellers = Inventory.get_by_pid(pid=productid)
     product = ProductDetails.get_details(id=productid)
     form = ReviewForm()
 
@@ -164,7 +160,7 @@ def editReview(productid = None):
         else:
             avgreview = round(avgreview, 3)
 
-        return render_template('product_detailed.html', product= product, sellers=sellers, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
+        return redirect(url_for('products.productDetails', productid=productid))
 
    
     if removeform.validate_on_submit():
@@ -182,7 +178,7 @@ def editReview(productid = None):
         else:
             avgreview = round(avgreview, 3)
          
-        return render_template('product_detailed.html', product = product, sellers=sellers, reviews = reviews, form = form, pid = productid,avgreview = avgreview, numreview =numreview)
+        return redirect(url_for('products.productDetails', productid=productid))
 
     return render_template('edit_review.html', editform = editform, removeform = removeform, productid = productid)
 

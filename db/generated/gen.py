@@ -3,9 +3,9 @@ import csv
 from faker import Faker
 from datetime import datetime
 
-num_users = 100
+num_users = 1000
 num_products = 2000
-num_purchases = 2500
+num_purchases = 10000
 
 Faker.seed(0)
 fake = Faker()
@@ -22,7 +22,7 @@ def gen_users(num_users):
             if uid % 10 == 0:
                 print(f'{uid}', end=' ', flush=True)
             profile = fake.profile()
-            email = profile['mail']
+            email = fake.unique.email()
             plain_password = f'pass{uid}'
             password = generate_password_hash(plain_password)
             name_components = profile['name'].split(' ')
@@ -33,8 +33,10 @@ def gen_users(num_users):
             city = wholeadd[1].split(',')[0]
             state = fake.state()
             value = f'{str(fake.random_int(max=500000))}.{fake.random_int(max=99):02}'
-            writer.writerow([uid, email, password, firstname, lastname, address, city, state, value])
+            image = fake.image_url(width=200, height=200, placeholder_url='https://picsum.photos/{width}/{height}')
+            writer.writerow([uid, email, password, firstname, lastname, address, city, state, value, image])
         print(f'{num_users} generated')
+        fake.unique.clear()
     return
 
 
