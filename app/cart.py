@@ -21,7 +21,7 @@ class CartForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
     submit = SubmitField('sort')
 '''
-
+global total
 @bp.route('/items', methods=['GET', 'POST'])
 def items():
     if current_user.is_authenticated:
@@ -64,12 +64,30 @@ def edit_num(pid):
 
     return render_template('cart.html', user_cart=cart, total=total)
 
-@bp.route('/submit_cart/<int:pid>' ,methods=['GET','POST'])
-def submit_cart(pid):
+@bp.route('/submit_cart' ,methods=['GET','POST'])
+def submit_cart():
     if current_user.is_authenticated:
         cart = Cart.get_cart(current_user.id)
         total = 0
+        currentbal = User.getvalue(current_user.id)
         for item in cart:
-            item.delete_item(pid)
-
+            total += item.subtotal
+        if currentbal < total:
+            flash('insufficent balance!')
+            return redirect(url_for('cart.items'))
+          
+        User.Updatevalue(current_user.id,value=currentbal-total)
+        #inventory = Inventory.editInventory()
+        for item in cart:
+            inventory = Inventory.get_by_pid(item.pid)
+            print(inventory[0])
+            old_quant = inventory[0].invNum
+            new_quant = item.num_item
+            if old_quant < new_quant:
+                Inventory.editInventory(item.pid, value= 0)
+            else:
+                Inventory.editInventory(item.pid, value= old_quant-new_quant)
+            
+            Purchase.add_purchase(current_user.id, inventory[0].pid, inventory[0].sid)
+        cart = Cart.remove_all(current_user.id)
     return render_template('cart.html', cart=cart, total=total)

@@ -96,3 +96,12 @@ LIMIT 50
                               pid=pid, num_item=num_item)
         return
 
+    @staticmethod
+    def remove_all(uid):
+        rows = app.db.execute('''
+    DELETE 
+    FROM Line_item 
+    WHERE uid =:uid
+    ''',
+                              uid=uid)
+        return

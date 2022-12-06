@@ -45,12 +45,14 @@
     {% endfor %}
   </tbody>
 
-<h2>Cart Total: {{ total}}</h2>
-<br><br>
-
+  <h2>Cart Total: {{ total }}</h2>
+  
+  <form method="post"  action="{{ url_for('order.item') }}">
+  <button id="button2" >Confirm Purchase</button>
+  </form>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to view your cart!</p>
-<h2>Cart Total: {{ total}}</h2>
+
     <br><br>
 {% endif %}
 {% endblock %}

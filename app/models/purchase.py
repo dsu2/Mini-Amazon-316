@@ -52,3 +52,18 @@ FROM Purchases
 LIMIT 50
 ''')
         return [Purchase(*row) for row in rows]
+    
+    @staticmethod
+    def add_purchase(uid,pid,sid):
+        try:
+            rows = app.db.execute('''
+INSERT INTO Purchases(uid,pid,sid)
+VALUES(:uid, :pid, :sid)
+RETURNING pid
+''',
+                              uid=uid, pid=pid, sid=sid)
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+    
