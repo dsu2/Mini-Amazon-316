@@ -10,7 +10,8 @@ CREATE TABLE Users (
     address VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     state VARCHAR(255) NOT NULL,
-    value DECIMAL(14,2) NOT NULL CHECK (value >= 0)
+    value DECIMAL(14,2) NOT NULL CHECK (value >= 0),
+    image VARCHAR(2083) NOT NULL
 );
 
 CREATE TABLE Products (
@@ -36,7 +37,7 @@ CREATE TABLE Purchases (
     sid INT NOT NULL REFERENCES Sellers(id)
 );
 
-CREATE TABLE PurchasesDetails (
+CREATE TABLE PurchasesDetailed (
     purch_id INT NOT NULL REFERENCES Purchases(id),
     total_amount FLOAT NOT NULL,
     no_of_items INT NOT NULL,

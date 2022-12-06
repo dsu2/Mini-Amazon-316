@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <br>
 <div style="display:flex; width:fit-content;">
   <b style="font-size:250%; background-color:#242424; color:aliceblue; padding:10px;">{{product.name}}</b>
@@ -30,12 +29,14 @@
     {{ form.submit(class_="btn btn-black") }}
   </p>
 </form> 
-
+<br>
+<h3 style="color: red;">{{errorReview}}
+<br>
 <h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
 
 {{ pagination.info }}
 {{ pagination.links }}
-<p><h3 style="color: red;">{{errorReview}}</p>
+
 <h2>Reviews:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -58,7 +59,7 @@
         <td>{{review.text}}</td>
         <td>{{review.rating}}</td>
         <td>  
-          {% if current_user.is_authenticated and review.pid|string == current_user.get_id()%}
+          {% if current_user.is_authenticated and review.uid|string == current_user.get_id() %}
           <a href= "{{ url_for('products.editReview', productid=pid) }}" class="btn btn-primary">Edit Review</a>  
           {% endif %}                
         </td>
@@ -71,6 +72,7 @@
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
+      <th scope = "col"> Seller's UID</th>
       <th scope="col">Inventory Quantity</th>
       <th scope="col">Add to cart?</th>
     </tr>
@@ -78,7 +80,8 @@
   <tbody>
     {% for seller in sellers%}
       <tr>
-        <!--- <th scope="row" style="color:#242424">{{seller.sid}}</th> -->
+
+        <th scope="row" style="color:#242424"> <a href= "{{ url_for('users.publicprofile', userid = Seller.get_uid(seller.sid)) }}">{{Seller.get_uid(seller.sid)}}</a></th>
         <td style="color:#242424">{{seller.invNum}}</td>
         <td>
           <a href= "{{ url_for('products.productDetails', productid=product.id, sellerid=seller.sid) }}" class="btn btn-primary">Add to Cart</a> 

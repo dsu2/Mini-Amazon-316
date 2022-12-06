@@ -52,3 +52,25 @@ FROM Purchases
 LIMIT 50
 ''')
         return [Purchase(*row) for row in rows]
+
+    @staticmethod
+    def get_by_uid_pid(uid, pid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_purchased, sid
+FROM Purchases
+WHERE uid = :uid AND pid = :pid
+ORDER BY time_purchased DESC
+''',
+                              uid=uid, pid = pid)
+        return [Purchase(*row) for row in rows]
+    
+    @staticmethod
+    def get_by_uid_sid(uid, sid):
+        rows = app.db.execute('''
+SELECT id, uid, pid, time_purchased, sid
+FROM Purchases
+WHERE uid = :uid AND sid = :sid
+ORDER BY time_purchased DESC
+''',
+                              uid=uid, sid=sid)
+        return [Purchase(*row) for row in rows]
