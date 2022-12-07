@@ -21,9 +21,9 @@ class CartForm(FlaskForm):
     uid = IntegerField('User ID', validators=[DataRequired(), NumberRange(min=1, max =10000)])
     submit = SubmitField('sort')
 '''
-global total
 @bp.route('/items', methods=['GET', 'POST'])
 def items():
+    total = 0
     if current_user.is_authenticated:
         cart = Cart.get_cart(current_user.id)
         total = 0
@@ -77,6 +77,9 @@ def submit_cart():
             return redirect(url_for('cart.items'))
           
         User.Updatevalue(current_user.id,value=currentbal-total)
+        for item in cart:
+            currentsellerbal = User.getvalue(item.sid)
+            User.Updatevalue(item.sid, value=currentsellerbal+item.subtotal)
         #inventory = Inventory.editInventory()
         for item in cart:
             inventory = Inventory.get_by_pid(item.pid)
@@ -89,5 +92,8 @@ def submit_cart():
                 Inventory.editInventory(item.pid, value= old_quant-new_quant)
             
             Purchase.add_purchase(current_user.id, inventory[0].pid, inventory[0].sid)
+            'purchaseele = Purchase.get_by_purchaseid()'
+            'PurchaseDetail.add_purchasedetail(purchaseele, item.subtotal,item.num_item)'
+        'Purchase.add_purchase(current_user.id, inventory[0].pid, inventory[0].sid)'
         cart = Cart.remove_all(current_user.id)
     return render_template('cart.html', cart=cart, total=total)

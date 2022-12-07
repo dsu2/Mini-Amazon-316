@@ -9,7 +9,7 @@
   <p style="font-size:250%; background-color:slategray; color:aliceblue; padding:10px;">User ID: {{user_info.id}}</p>
 </div>
 <br>
-
+<img src= "{{user_info.image}}" alt = "testing" width = "200" height = "200">
 {% if sellerid != None%}
 <div style="display:inline-flex; width:fit-content;">
   <p style="padding-left: 10px;">
@@ -20,11 +20,22 @@
   </p>
 </div>
 
+<form action="" method="post">
+  {{ form.hidden_tag() }}
+  <br><br>
+  <p>
+    {{ form.text.label }}
+    {{ form.text(type = "string") }}
+    {{ form.val.label }}
+    {{ form.val(type="number") }}
+    {{ form.submit(class_="btn btn-black") }}
+  </p>
+</form> 
+<p><h3 style="color: red;">{{errorReview}}</p>
 <h3>Average Rating: {{avgreview}}, Number of Ratings: {{numreview}} </h3> 
 
 {{ sellerpagination.info}}
 {{ sellerpagination.links }}
-<p><h3 style="color: red;">{{errorReview}}</p>
 <h2>Reviews of this Seller:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
@@ -46,7 +57,7 @@
         <td>{{review.rating}}</td>
         <td>  
           {% if current_user.is_authenticated and review.uid|string == current_user.get_id()%}
-          <a href= "https://google.com" class="btn btn-primary">Edit Review</a>  
+          <a href= "{{url_for('users.editReview', sellersuserid = user_info.id)}}" class="btn btn-primary">Edit Review</a>  
           {% endif %}                
         </td>
       </tr>
@@ -55,8 +66,39 @@
 </table>
 <br>
 {% endif %}
+
+<h2>Reviews by this User:</h2>
+{{ userpagination.info}}
+{{ userpagination.links }}
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">Product ID</th>
+      <th scope="col">Review Time</th>
+      <th scope="col">Text</th>
+      <th scope="col">Rating</th>
+      <th scope="col"> </th>
+      
+    </tr>
+  </thead>
+  <tbody>
+    {% for review in userreviews%}
+      <tr>
+        <td><a href = "{{ url_for('products.productDetails', productid =review.pid) }}"> {{review.pid}}</a></td>
+        <td>{{review.time_purchased}}</td>
+        <td>{{review.text}}</td>
+        <td>{{review.rating}}</td>
+        <td>  
+          {% if current_user.is_authenticated and review.uid|string == current_user.get_id()%}
+          <a href= "{{ url_for('products.editReview', productid =review.pid) }}" class="btn btn-primary">Edit Review</a>  
+          {% endif %}                
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<br>
 {% endblock %}
 
 
 <br><br>
-

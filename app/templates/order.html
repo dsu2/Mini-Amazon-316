@@ -42,9 +42,7 @@
   <form method="post"  action="{{ url_for('cart.submit_cart') }}">
     <button id="button1" type="submit">Place Order</button>
     </form>
-<form method="post" action="{{ url_for('cart.items') }}">
-    <button id="button1" type="submit">Return to Cart</button>
-  </form></table>
+</table>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to view your cart!</p>
 

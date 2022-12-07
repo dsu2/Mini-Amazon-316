@@ -84,12 +84,12 @@ RETURNING pid, uid
 """,
                                   pid = pid,
                                   uid = uid,
-                                  text = text, rating = rating, time_purchased = datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+                                  text = text, rating = rating, time_purchased = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
             print(str(e))
-            return e
+            return None
 
 
     @staticmethod
@@ -102,7 +102,7 @@ WHERE pid = :pid AND uid = :uid
 """,
                                   pid = pid,
                                   uid = uid,
-                                  text = text, rating = rating, time_purchased = datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+                                  text = text, rating = rating, time_purchased = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
@@ -217,12 +217,12 @@ RETURNING sid, uid
 """,
                                   sid = sid,
                                   uid = uid,
-                                  text = text, rating = rating, time_written = datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+                                  text = text, rating = rating, time_written = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
             print(str(e))
-            return e
+            return None
 
 
     @staticmethod
@@ -235,7 +235,7 @@ WHERE sid = :sid AND uid = :uid
 """,
                                   sid = sid,
                                   uid = uid,
-                                  text = text, rating = rating, time_written = datetime.now().strftime("%d-%m-%Y %H:%M:%S"))
+                                  text = text, rating = rating, time_written = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:

@@ -6,7 +6,7 @@ from .. import login
 
 
 class User(UserMixin):
-    def __init__(self, id, email, firstname, lastname, address, city, state, value=0):
+    def __init__(self, id, email, firstname, lastname, address, city, state, value, image):
         self.id = id
         self.email = email
         self.firstname = firstname
@@ -14,12 +14,13 @@ class User(UserMixin):
         self.address = address
         self.city = city
         self.state = state
+        self.image = image
         self.value = value
 
     @staticmethod
     def get_by_auth(email, password):
         rows = app.db.execute("""
-SELECT password, id, email, firstname, lastname, address, city, state, value
+SELECT password, id, email, firstname, lastname, address, city, state, value, image
 FROM Users
 WHERE email = :email
 """,
@@ -43,16 +44,16 @@ WHERE email = :email
         return len(rows) > 0
 
     @staticmethod
-    def register(email, password, firstname, lastname, address, city, state):
+    def register(email, password, firstname, lastname, address, city, state, image = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png"):
         try:
             rows = app.db.execute("""
-INSERT INTO Users(email, password, firstname, lastname, address, city, state, value)
-VALUES(:email, :password, :firstname, :lastname, :address, :city, :state, :value)
+INSERT INTO Users(email, password, firstname, lastname, address, city, state, value, image)
+VALUES(:email, :password, :firstname, :lastname, :address, :city, :state, :value, :image)
 RETURNING id
 """,
                                   email=email,
                                   password=generate_password_hash(password),
-                                  firstname=firstname, lastname=lastname, address = address, city = city, state = state, value = 0)
+                                  firstname=firstname, lastname=lastname, address = address, city = city, state = state, value = 0, image = image)
             id = rows[0][0]
             return User.get(id)
         except Exception as e:
@@ -65,7 +66,7 @@ RETURNING id
     @login.user_loader
     def get(id):
         rows = app.db.execute("""
-SELECT id, email, firstname, lastname, address, city, state, value
+SELECT id, email, firstname, lastname, address, city, state, value, image
 FROM Users
 WHERE id = :id
 """,
@@ -86,6 +87,21 @@ WHERE id = :id
             # the following simply prints the error to the console:
             print(str(e))
             return e
+    
+    def editUserImage(id, image):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET image = :image  
+WHERE id = :id
+""",
+                                  id=id, image = image)
+
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e  
 
     def editUserEmail(id, email):
         try:
@@ -166,3 +182,16 @@ WHERE id = :id
 """,
                               id=id)
         return rows[0][0] if rows else None
+
+    @staticmethod
+    def Updatevalue(id,value):
+        print(value)
+        rows = app.db.execute("""
+UPDATE Users
+SET value =:value
+WHERE id = :id
+""",
+                              id=id,value=value)
+        print(rows)
+        return 
+        
