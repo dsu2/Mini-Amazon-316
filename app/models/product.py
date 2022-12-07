@@ -23,13 +23,17 @@ WHERE id = :id
 
     @staticmethod
     def get_by_name(name):
-        rows = app.db.execute('''
-SELECT id, name, price, category, available
-FROM Products
-WHERE name = :name
-''',
-                              name=name)
-        return rows[0][0] if rows is not None else None
+        try:
+            rows = app.db.execute('''
+    SELECT id, name, price, category, available
+    FROM Products
+    WHERE name = :name
+    ''',
+                                name=name)
+            return rows[0][0] if rows is not None else None
+        except Exception as e:
+            print(str(e))
+            return None
 
     @staticmethod
     def get_all(available=True):
