@@ -2,19 +2,17 @@ from flask import current_app as app
 
 
 class Purchase:
-    def __init__(self, id, uid, pid, time_purchased, sid):
-        self.id = id
+    def __init__(self, purch_id, uid, time_purchased):
+        self.purch_id = purch_id
         self.uid = uid
-        self.pid = pid
         self.time_purchased = time_purchased
-        self.sid = sid
 
     @staticmethod
-    def get(id):
+    def get(purch_id):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT purch_id, uid, time_purchased
 FROM Purchases
-WHERE id = :id
+WHERE purch_id = :purch_id
 ''',
                               id=id)
         return Purchase(*(rows[0])) if rows else None
@@ -22,7 +20,7 @@ WHERE id = :id
     @staticmethod
     def get_all_by_uid_since(uid, since):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased
+SELECT purch_id, uid, time_purchased
 FROM Purchases
 WHERE uid = :uid
 AND time_purchased >= :since
@@ -36,7 +34,7 @@ LIMIT 50
     @staticmethod
     def get_by_uid(uid):
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased, sid
+SELECT purch_id, uid, time_purchased
 FROM Purchases
 WHERE uid = :uid
 ORDER BY time_purchased DESC
@@ -44,33 +42,45 @@ ORDER BY time_purchased DESC
                               uid=uid)
         return [Purchase(*row) for row in rows]
 
+    
     @staticmethod
     def get_all():
         rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased, sid
+SELECT purch_id, uid, time_purchased
 FROM Purchases
 LIMIT 50
 ''')
         return [Purchase(*row) for row in rows]
 
     @staticmethod
-    def get_by_uid_pid(uid, pid):
-        rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased, sid
-FROM Purchases
-WHERE uid = :uid AND pid = :pid
-ORDER BY time_purchased DESC
+    def add_purchase(uid):
+        try:
+            rows = app.db.execute('''
+INSERT INTO Purchases(uid)
+VALUES(:uid)
+RETURNING uid
 ''',
-                              uid=uid, pid = pid)
-        return [Purchase(*row) for row in rows]
-    
+                              uid=uid)
+            
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+
     @staticmethod
-    def get_by_uid_sid(uid, sid):
-        rows = app.db.execute('''
-SELECT id, uid, pid, time_purchased, sid
-FROM Purchases
-WHERE uid = :uid AND sid = :sid
-ORDER BY time_purchased DESC
+    def get_latest_purch_id(uid):
+        try:
+            rows = app.db.execute('''
+SELECT purch_id
+FROM Purchases 
+WHERE time_purchased = 
+(SELECT MAX(time_purchased) FROM Purchases)
+
+
 ''',
-                              uid=uid, sid=sid)
-        return [Purchase(*row) for row in rows]
+                                uid=uid)
+            return rows
+        except Exception as e:
+            print(str(e))
+            return None
+                            

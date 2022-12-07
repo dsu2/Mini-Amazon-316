@@ -92,6 +92,7 @@ def gen_inventory(available_sids, available_pids):
             invNum = fake.random_int(0, 1000)
             sid = fake.random_element(elements=available_sids)
             pid = available_pids[i]
+            
             writer.writerow([sid, pid, invNum])
             if pid in proddict:
                 proddict[pid] = proddict[pid].append(sid)
