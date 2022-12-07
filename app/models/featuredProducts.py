@@ -30,7 +30,7 @@ LIMIT 10
                 FROM Products
                 LEFT OUTER JOIN ProductReviews
                 ON Products.id=ProductReviews.pid
-                WHERE available=True
+                WHERE available = True
                 '''
 
         if category != "" or search != "":

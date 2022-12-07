@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
+from werkzeug.security import generate_password_hash
 from flask_login import login_user, logout_user, current_user
 from flask_wtf import FlaskForm
 from flask_paginate import Pagination, get_page_parameter, get_page_args
@@ -69,7 +70,7 @@ class passwordEditForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired()])
     new_password2 = PasswordField(
         'Repeat New Password', validators=[DataRequired(),
-                                       EqualTo('password')])
+                                       EqualTo('new_password')])
     submit = SubmitField('Submit Changes')
 
 class AddressEditForm(FlaskForm):
@@ -197,9 +198,8 @@ def withdrawMoney(userid = None):
                     error = "You can't withdraw more money than what is in your account!"
             else:
                 error = "You can't withdraw a negative amount! Try to deposit instead."
-                print("SQUIDWARD GAMING", file = sys.stdout)
-    else:
-        error = "You have entered an invalid amount."
+    #else:
+        #flash("You have entered an invalid amount.")
     return render_template('withdrawMoney.html', eForm = eForm, error = error, currentbal=currentbal)
 
 
@@ -229,7 +229,7 @@ def editPassword(userid = None):
             flash('Passwords do not match!')
             return redirect(url_for('users.editPassword'))
         else:
-            User.editUserPassword(id=userid, password=pwForm.new_password.data)
+            User.editUserPassword(id=userid, password=generate_password_hash(pwForm.new_password.data))
             if pwForm.new_password.data and pwForm.new_password2.data:
                 return redirect(url_for('users.profile'))
     return render_template('change_password.html', pwForm = pwForm)
@@ -287,21 +287,21 @@ def publicprofile(userid = None):
             if current_user.get_id() != None and len(Purchase.get_by_uid_sid(uid=current_user.get_id(), sid = sellerid) )!= 0:
                 result = SellerReview.addSellerReview(sid = sellerid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)
                 if result == None:
-                    errorReview = "You have reviewed this seller."
+                    errorReview = "You have already reviewed this seller."
             else:
                 errorReview = "You cannot review this seller because you did not purchase an item from them!"
     print(errorReview, file = sys.stdout)
     sellerreviews = None
     pagination_sellerreviews= None
     sellerpagination = None
+
     sellerid = Seller.get_sid(userid)
     if sellerid != None:
         sellerreviews = SellerReview.get_all_by_sid(sellerid)
         pagination_sellerreviews = sellerreviews[offset:offset+per_page]
         print(pagination_sellerreviews, file = sys.stdout)
         sellerpagination = Pagination(page=page, total=len(sellerreviews), record_name='seller reviews', per_page=per_page)
-        if avgreview!= None:
-            avgreview = round(SellerReview.findAvgRating(sid=sellerid), 2)
+        avgreview = round(SellerReview.findAvgRating(sid=sellerid), 2)
         numreview = SellerReview.findNumReview(sid=sellerid)
 
     return render_template('publicprofile.html', user_info=user_info, userpagination = userpagination, \
