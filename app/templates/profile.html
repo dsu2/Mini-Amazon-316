@@ -28,9 +28,11 @@
 <br>
 <br>
 <p> <b>User ID:</b> {{user_info.id}}</p>
+<a  href="{{ url_for('users.registerSeller') }}" role="button">Register As Seller</a>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>
+
 
 {% endif %}
 

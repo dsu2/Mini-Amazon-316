@@ -87,6 +87,21 @@ WHERE id = :id
             # the following simply prints the error to the console:
             print(str(e))
             return e
+    
+    def editUserImage(id, image):
+        try:
+            rows = app.db.execute("""
+UPDATE Users
+SET image = :image  
+WHERE id = :id
+""",
+                                  id=id, image = image)
+
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e  
 
     def editUserEmail(id, email):
         try:
@@ -181,3 +196,16 @@ WHERE id = :id
 """,
                               id=id)
         return rows[0][0] if rows else None
+
+    @staticmethod
+    def Updatevalue(id,value):
+        print(value)
+        rows = app.db.execute("""
+UPDATE Users
+SET value =:value
+WHERE id = :id
+""",
+                              id=id,value=value)
+        print(rows)
+        return 
+        
