@@ -16,6 +16,8 @@ from .models.cart import Cart
 from .models.inventory import Inventory
 from .models.productDetails import ProductDetails
 from .models.seller import Seller
+from .models.featuredProducts import FeaturedProduct
+from .users import LoginForm
 
 from flask import Blueprint
 bp = Blueprint('products', __name__)
@@ -24,7 +26,7 @@ class SearchForm(FlaskForm):
     k = IntegerField('Number of products', validators=[Optional(), NumberRange(min=1, max =1000)])
     category = SelectField('Category', validators=[Optional()], choices=['All Categories','Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf'])
     search = StringField('Search products by name', validators=[Optional(), Length(min=1, max=150)])
-    byPrice = SelectField('Sort by Price', validators=[Optional()], choices=['None', 'LowtoHigh', 'HightoLow'])
+    byWhat = SelectField('Sort by...', validators=[Optional()], choices=['None', 'Price LowtoHigh', 'Price HightoLow', 'Rating LowtoHigh', 'Rating HightoLow'])
     submit = SubmitField('Search')
 
 class PageForm(FlaskForm):
@@ -55,6 +57,13 @@ class NewProductForm(FlaskForm):
     inventoryNum = IntegerField("Amount of product", validators=[DataRequired(), NumberRange(min=0, max = 100000)])
     submit = SubmitField('Post new product')
 
+class EditProductForm(FlaskForm):
+    price = DecimalField("Price", places=2, validators=[DataRequired(), NumberRange(min=.01, max = 1000000)])   
+    category = SelectField("Category", validators=[DataRequired()], choices=['Electronics', 'Decor', 'Grocery', 'Toys', 'Sports', 'Beauty', 'Automotive', 'Pets', 'Books', 'Movies', 'Games', 'Golf'])
+    des = StringField("Description", validators = [DataRequired(), Length(min=10, max=10000)])
+    image = StringField("Image URL", validators=[DataRequired(), URL()])
+    submit = SubmitField('Update Listing')
+
 class OldForm(FlaskForm):
     name2 = StringField("Name", validators = [DataRequired(), Length(min=2, max=1000)])
     inventoryNum2 = IntegerField("Amount", validators=[DataRequired(), NumberRange(min=0, max = 100000)])
@@ -72,14 +81,14 @@ def shelf():
 
     form = SearchForm()
     if form.validate_on_submit():
-        return redirect(url_for('products.shelf', available='True', number=form.k.data, category=form.category.data, search=form.search.data, byPrice=form.byPrice.data))
+        return redirect(url_for('products.shelf', available='True', number=form.k.data, category=form.category.data, search=form.search.data, byWhat=form.byWhat.data))
         
     number = request.args.get('number','')
     category = request.args.get('category','')
     search = request.args.get('search','')
-    byPrice = request.args.get('byPrice','')
+    byWhat = request.args.get('byWhat','')
 
-    products = Product.get_product_list(True, number, category, search, byPrice)    
+    products = FeaturedProduct.get_product_list(True, number, category, search, byWhat)    
     pagination_products = products[offset*5:offset*5+per_page]
 
     pagination = Pagination(page=page, total=len(products), record_name='products', per_page=per_page)
@@ -87,6 +96,36 @@ def shelf():
     return render_template('products.html',
                            avail_products=pagination_products,
                            form=form, pagination=pagination, page=page, per_page=per_page)
+
+@bp.route('/listings', methods=['GET', 'POST'])
+def listings():
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
+    userid = current_user.get_id()
+    sid = Seller.get_sid(current_user.id)
+    page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
+    per_page=50
+
+    form = SearchForm()
+    if form.validate_on_submit():
+        return redirect(url_for('products.listings', available='True', number=form.k.data, category=form.category.data, search=form.search.data, byWhat=form.byWhat.data))
+        
+    number = request.args.get('number','')
+    category = request.args.get('category','')
+    search = request.args.get('search','')
+    byWhat = request.args.get('byWhat','')
+
+    products = FeaturedProduct.get_product_list_with_sid(True, number, category, search, byWhat, sid)    
+    pagination_products = products[offset*5:offset*5+per_page]
+
+    pagination = Pagination(page=page, total=len(products), record_name='products', per_page=per_page)
+
+    if sid is None:
+        return render_template('sellerSignUp.html')
+    else:
+        return render_template('myListings.html',
+                           avail_products=pagination_products,
+                           form=form, pagination=pagination, page=page, per_page=per_page, sid=sid)
 
 @bp.route('/pid/<int:productid>/', methods=['GET', 'POST'])
 def productDetails(productid=None, sellerid=None):
@@ -184,6 +223,8 @@ def editReview(productid = None):
 
 @bp.route('/shelf/addProduct', methods=['GET', 'POST'])
 def addProduct():
+    if not current_user.is_authenticated:
+        return redirect(url_for('users.login'))
     userid = current_user.get_id()
     sid = Seller.get_sid(current_user.id)
     error=""
@@ -215,4 +256,25 @@ def addProduct():
         return render_template('sellerSignUp.html')
     else:
         return render_template('postProduct.html', newForm=newForm, oldForm=oldForm2, error=error)
+
+
+@bp.route('/shelf/editProduct/<int:productid>/', methods=['GET', 'POST'])
+def editProduct(productid):
+    userid = current_user.get_id()
+    sid = Seller.get_sid(current_user.id)
+    error=""
+
+    details = ProductDetails.get_details(id=productid)
+    
+    editForm = EditProductForm()
+   
+    if editForm.validate_on_submit():
+        new_pid = ProductDetails.editProduct(productid, editForm.price.data, editForm.category.data, editForm.des.data, editForm.image.data)
+        if new_pid: 
+            error = "Success! Product edited"
+        else:
+            error = "could not edit product"
+
+
+    return render_template('updateProduct.html', editForm=editForm, error=error, details=details)
 

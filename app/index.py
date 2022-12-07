@@ -10,6 +10,7 @@ from .models.purchase import Purchase
 from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.inventory import Inventory
+from .models.featuredProducts import FeaturedProduct
 
 
 from flask import Blueprint
@@ -40,33 +41,8 @@ class PurForm(FlaskForm):
 @bp.route('/', methods=['GET', 'POST'])
 def index():
     # get all available products for sale:
+    featured = FeaturedProduct.get_featured()
 
-    cform = CartForm()
-    if cform.validate_on_submit():
-        cart = Cart.get_cart(cform.uid.data)
-    else:
-        cart = Cart.get_all()
-
-    iform = InvForm()
-    if iform.validate_on_submit():
-        inv = Inventory.get_by_sid(iform.sid.data)
-    else:
-        inv = Inventory.get_all()
-    '''
-
-    pform = PurForm()
-    if pform.validate_on_submit():
-        purch = Purchase.get_by_uid(pform.uid.data)
-    else:
-        purch = Purchase.get_all()
-
-    # find the products current user has bought:
-    if current_user.is_authenticated:
-        purchases = Purchase.get_all_by_uid_since(
-            current_user.id, datetime.datetime(1980, 9, 14, 0, 0, 0))
-    else:
-        purchases = None 
-    '''
     # render the page by adding information to the index.html file
-    return render_template('index.html',
-                           cform = cform, iform = iform, user_cart = cart, user_inventory = inv)
+    return render_template('index.html', 
+                           featured=featured)

@@ -14,8 +14,8 @@
     {{ form.category.label }}
     {{ form.category(type="select") }}
 
-    {{ form.byPrice.label }}
-    {{ form.byPrice(type="select") }}
+    {{ form.byWhat.label }}
+    {{ form.byWhat(type="select") }}
 
     {{ form.submit(class_="btn btn-black") }}
   </p>
@@ -33,6 +33,7 @@
       <th scope="col">Product Name</th>
       <th scope="col">Price</th>
       <th scope="col">Category</th>
+      <th scope="col">Rating</th>
       <th scope="col"> </th>
     </tr>
   </thead>
@@ -43,6 +44,7 @@
       <td>{{product.name}}</td>
       <td>{{product.price}}</td>
       <td>{{product.category}}</td>
+      <td>{{product.rating}}</td>
       <td>
         <a href="{{ url_for('products.productDetails', productid=product.id) }}" class="btn btn-primary">Details</a>
       </td>
