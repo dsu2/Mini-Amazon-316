@@ -74,3 +74,15 @@ RETURNING pid
         except Exception as e:
             print(str(e))
             return None
+
+
+    @staticmethod
+    def editInventory(pid,value):
+        rows = app.db.execute('''
+    UPDATE Inventory
+    SET invNum =:value
+    WHERE Inventory.pid =:pid
+    ''',
+                        pid=pid, value=value)
+        return
+  

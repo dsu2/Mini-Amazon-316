@@ -215,4 +215,3 @@ def addProduct():
         return render_template('sellerSignUp.html')
     else:
         return render_template('postProduct.html', newForm=newForm, oldForm=oldForm2, error=error)
-

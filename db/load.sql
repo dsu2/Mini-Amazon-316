@@ -16,8 +16,8 @@ SELECT pg_catalog.setval('public.sellers_id_seq',
                          false);
 
 \COPY Purchases FROM '/home/vcm/Mini-Amazon-316/db/generated/Purchases.csv' WITH DELIMITER ',' NULL '' CSV
-SELECT pg_catalog.setval('public.purchases_id_seq',
-                         (SELECT MAX(id)+1 FROM Purchases),
+SELECT pg_catalog.setval('public.purchases_purch_id_seq',
+                         (SELECT MAX(purch_id)+1 FROM Purchases),
                          false);
 
 \COPY PurchasesDetailed FROM '/home/vcm/Mini-Amazon-316/db/generated/PurchasesDetailed.csv' WITH DELIMITER ',' NULL '' CSV

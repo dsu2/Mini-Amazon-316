@@ -34,12 +34,21 @@ WHERE id = :id
         return rows[0][0] if rows else None
 
     @staticmethod
+    def get_uid(sid):
+        rows = app.db.execute("""
+SELECT uid
+FROM Sellers
+WHERE id = :id
+""",
+                              id=sid)
+        return rows[0][0] if rows else None
+
+    @staticmethod
     def registerSeller(uid):
         try:
             rows = app.db.execute("""
 INSERT INTO Sellers(uid)
 VALUES(:uid)
-RETURNING id
 """,
                                   uid=uid)
             id = rows[0][0]
@@ -48,3 +57,4 @@ RETURNING id
            
             print(str(e))
             return None
+
