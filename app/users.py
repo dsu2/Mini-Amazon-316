@@ -119,7 +119,7 @@ def profile():
     user_info = None
     if current_user.is_authenticated:
         user_info = User.get(current_user.id)
-    return render_template('profile.html', user_info=user_info)
+    return render_template('profile.html', user_info=user_info, Seller = Seller)
 
 #editing user info
 @bp.route('/edit-name', methods=['GET', 'POST'])

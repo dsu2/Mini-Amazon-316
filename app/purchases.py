@@ -11,6 +11,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Nu
 from .models.product import Product
 from .models.purchase import Purchase
 from .models.purchaseDetail import PurchaseDetail
+from .models.seller import Seller
 from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.inventory import Inventory
@@ -48,5 +49,5 @@ def purchaseDetails(purch_id):
             total += item.subtotal
             total_item += item.no_of_items
     return render_template('purchase_detailed.html', 
-                        purchase = purchase, purchase_detail = purchase_detail,purch_id=purch_id,total=total, total_item=total_item)
+                        purchase = purchase, purchase_detail = purchase_detail,purch_id=purch_id,total=total, total_item=total_item, Seller = Seller)
 

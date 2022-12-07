@@ -28,9 +28,9 @@
     {% for p in purchase_detail%}
       <tr>
 
-        <td>{{p.pid}}</td>
+        <td><a href = "{{url_for('products.productDetails', productid = p.pid)}}">{{p.pid}}</a></td>
         <td>{{p.name}}</td>
-        <td>{{p.sid}}</td>
+        <td><a href = "{{url_for('users.publicprofile', userid = Seller.get_uid(p.sid))}}">{{p.sid}}</a></td>
         <td>{{p.no_of_items}}</td>
         <td>${{p.price}}</td>
         <td>{{ p.fulfilled }}</td>
