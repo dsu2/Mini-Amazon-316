@@ -29,14 +29,15 @@ LIMIT 10
                 SELECT id, name, price, category, available, ROUND(AVG(rating),2)
                 FROM Products
                 LEFT OUTER JOIN ProductReviews
+                ON Products.id=ProductReviews.pid
                 WHERE available = True
                 '''
 
         if category != "" or search != "":
             if category != 'All Categories':
-                base = base+" WHERE "
+                base = base+" AND "
             elif search !="":
-                    base=base+ " WHERE "
+                    base=base+ " AND "
 
         if category != "":
             if category != 'All Categories':
