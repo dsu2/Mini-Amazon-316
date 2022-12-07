@@ -84,3 +84,24 @@ WHERE time_purchased =
             print(str(e))
             return None
                             
+    @staticmethod
+    def get_by_uid_pid(uid, pid):
+        rows = app.db.execute('''
+SELECT Purchases.purch_id, uid, time_purchased
+FROM Purchases, PurchasesDetailed
+WHERE uid = :uid AND pid = :pid AND Purchases.purch_id = PurchasesDetailed.purch_id
+ORDER BY time_purchased DESC
+''',
+                              uid=uid, pid = pid)
+        return [Purchase(*row) for row in rows]
+    
+    @staticmethod
+    def get_by_uid_sid(uid, sid):
+        rows = app.db.execute('''
+SELECT Purchases.purch_id, uid, time_purchased
+FROM Purchases, PurchasesDetailed
+WHERE uid = :uid AND sid = :sid AND Purchases.purch_id = PurchasesDetailed.purch_id
+ORDER BY time_purchased DESC
+''',
+                              uid=uid, sid = sid)
+        return [Purchase(*row) for row in rows]

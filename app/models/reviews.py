@@ -85,6 +85,7 @@ RETURNING pid, uid
                                   pid = pid,
                                   uid = uid,
                                   text = text, rating = rating, time_purchased = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            return rows
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:
@@ -218,6 +219,7 @@ RETURNING sid, uid
                                   sid = sid,
                                   uid = uid,
                                   text = text, rating = rating, time_written = datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            return rows
         except Exception as e:
             # likely email already in use; better error checking and reporting needed;
             # the following simply prints the error to the console:

@@ -152,7 +152,7 @@ def productDetails(productid=None, sellerid=None):
             result = ProductReview.addProductReview(pid = productid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)  
             reviews = ProductReview.get_all_by_pid(productid)
             if result == None:
-                errorReview = "You have reviewed this product."
+                errorReview = "You have already reviewed this product."
         else:
             errorReview = "You cannot review this product because you did not purchase it!"
     
