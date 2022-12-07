@@ -35,3 +35,22 @@ RETURNING id
         except Exception as e:
             print(str(e))
             return None
+
+    @staticmethod
+    def editProduct(pid, price, category, des, image):
+        try:
+            rows = app.db.execute("""
+UPDATE Products
+SET price = :price, category = :category, des = :des, image = :image
+WHERE id = :pid
+Returning id
+""",
+                                pid=pid, price=price, category=category,
+                                des=des, image=image)
+            id = rows[0][0]
+            return id
+        except Exception as e:
+            # likely email already in use; better error checking and reporting needed;
+            # the following simply prints the error to the console:
+            print(str(e))
+            return e

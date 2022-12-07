@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Update product: {{details.name}}</h1>
+<form action="" method="post">
+    {{ editForm.hidden_tag() }}
+    <p>
+        <h3>previous: {{details.price}}</h3>
+        {{ editForm.price.label }}
+        {{ editForm.price(size=32) }}<br />
+        {% for error in editForm.price.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        <h3>previous: {{details.category}}</h3>
+        {{ editForm.category.label }}
+        {{ editForm.category(type="select") }}<br />
+        {% for error in editForm.category.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>
+        <h3>previous: {{details.des}}</h3>
+        {{ editForm.des.label }}
+        {{ editForm.des(size=128) }}<br />
+        {% for error in editForm.des.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p> 
+        {{ editForm.image.label }}
+        {{ editForm.image(type="url",placeholder="https://example.com") }}<br />
+        {% for error in editForm.image.errors %}
+        <span style="color: red;">[{{ error }}]</span>
+        {% endfor %}
+    </p>
+    <p>{{ editForm.submit() }}</p>
+</form>
+<br>
+<h3 style="color: red;">{{error}}</p>
+<br>
+
+
+
+
+
+{% endblock %}
