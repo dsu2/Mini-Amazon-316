@@ -3,12 +3,14 @@ from flask import render_template, redirect, url_for, flash, request
 from werkzeug.urls import url_parse
 from flask_login import current_user
 import datetime
+import random
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, IntegerField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, NumberRange
 from flask_sqlalchemy import SQLAlchemy
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.purchaseDetail import PurchaseDetail
 from .models.reviews import ProductReview
 from .models.cart import Cart
 from .models.user import User
@@ -66,6 +68,7 @@ def edit_num(pid):
 
 @bp.route('/submit_cart' ,methods=['GET','POST'])
 def submit_cart():
+    error = ''
     if current_user.is_authenticated:
         cart = Cart.get_cart(current_user.id)
         total = 0
@@ -73,7 +76,7 @@ def submit_cart():
         for item in cart:
             total += item.subtotal
         if currentbal < total:
-            flash('insufficent balance!')
+            error = "Insufficent Balance"
             return redirect(url_for('cart.items'))
           
         User.Updatevalue(current_user.id,value=currentbal-total)
@@ -83,17 +86,27 @@ def submit_cart():
         #inventory = Inventory.editInventory()
         for item in cart:
             inventory = Inventory.get_by_pid(item.pid)
-            print(inventory[0])
+         
             old_quant = inventory[0].invNum
             new_quant = item.num_item
             if old_quant < new_quant:
-                Inventory.editInventory(item.pid, value= 0)
+                error = "Insufficent Inventory"
+                return redirect(url_for('cart.items'))
             else:
                 Inventory.editInventory(item.pid, value= old_quant-new_quant)
             
-            Purchase.add_purchase(current_user.id, inventory[0].pid, inventory[0].sid)
-            'purchaseele = Purchase.get_by_purchaseid()'
-            'PurchaseDetail.add_purchasedetail(purchaseele, item.subtotal,item.num_item)'
-        'Purchase.add_purchase(current_user.id, inventory[0].pid, inventory[0].sid)'
+        Purchase.add_purchase(current_user.id)
+        purchid = Purchase.get_latest_purch_id(current_user.id)
+        purchase_id = purchid[0][0]
+        print(purchase_id)
+        
+        for item in cart:
+            fullfillment = bool(random.getrandbits(1))
+            PurchaseDetail.add_purchasedetail(purchase_id, item.pid, item.sid, item.num_item, fullfillment)
+        
+        print(PurchaseDetail.get_details(purchase_id))
+
+        
         cart = Cart.remove_all(current_user.id)
-    return render_template('cart.html', cart=cart, total=total)
+        print(cart)
+    return render_template('cart.html', cart=cart, total=total, error=error)

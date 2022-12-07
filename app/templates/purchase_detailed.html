@@ -5,9 +5,38 @@
 {% if current_user.is_authenticated %}
 <h3>Purchase Details:</h3>
 <br>
-<p> <b>Purchase ID:</b> {{purchase_specifics.purch_id}} </p>
-<p> <b>Total Amount Paid:</b> {{purchase_specifics.total_amount}} </p>
-<p> <b>Number of Items Bought:</b> {{purchase_specifics.no_of_items}} </p>
+<p> <b>Purchase ID:</b> {{purch_id}} </p>
+<p> <b>Total Amount Paid:</b> ${{total}} </p>
+<p> <b>Number of Items Bought:</b> {{total_item}} </p>
+<h2>Your Past Purchase:</h2>
+    </h3>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+
+        <th scope="col">Product ID</th>
+        <th scope="col">Product Name</th>
+      <th scope="col">Seller ID</th>
+      <th scope="col">Quantity</th>
+        <th scope="col">Price</th>
+        <th scope="col">Fulfilled</th>
+
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in purchase_detail%}
+      <tr>
+
+        <td>{{p.pid}}</td>
+        <td>{{p.name}}</td>
+        <td>{{p.sid}}</td>
+        <td>{{p.no_of_items}}</td>
+        <td>${{p.price}}</td>
+        <td>{{ p.fulfilled }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
 
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to see your purchase history!</p>

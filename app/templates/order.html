@@ -37,10 +37,12 @@
       </tr>
     {% endfor %}
   </tbody>
-
-  <h2 style="text-align: center;" >Grant total: {{ total }}</h2>
   <form method="post"  action="{{ url_for('cart.submit_cart') }}">
-    <button id="button1" type="submit">Place Order</button>
+    <button>Place Order</button>
+    </form>
+  <h2 style="text-align: center;" >Grant total: {{ total }}</h2>
+  <form method="post"  action="{{ url_for('purchases.yourPurchases') }}">
+    <button id="button1" type="submit">View Recent Purchases</button>
     </form>
 </table>
 {% else %}

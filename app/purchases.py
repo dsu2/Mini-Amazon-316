@@ -36,12 +36,17 @@ def yourPurchases():
     return render_template('purchases.html',
                            purchase_history=all_user_purchases)
 
-@bp.route('/your-purchases/<int:purchaseid>', methods=['GET', 'POST'])
-def purchaseDetails(purchaseid=None):
+@bp.route('/your-purchases/<int:purch_id>', methods=['GET', 'POST'])
+def purchaseDetails(purch_id):
     if current_user.is_authenticated:
-        purchase_specifics = PurchaseDetail.get_by_purchaseid(purch_id = purchaseid)[0]
-        print(purchase_specifics, file = sys.stdout)
-        print(purchase_specifics.purch_id, file = sys.stdout)
+        
+        purchase = Purchase.get_by_uid(current_user.id)
+        purchase_detail = PurchaseDetail.get_details(purch_id)
+        total=0
+        total_item=0
+        for item in purchase_detail:
+            total += item.subtotal
+            total_item += item.no_of_items
     return render_template('purchase_detailed.html', 
-                        purchase_specifics = purchase_specifics)
+                        purchase = purchase, purchase_detail = purchase_detail,purch_id=purch_id,total=total, total_item=total_item)
 

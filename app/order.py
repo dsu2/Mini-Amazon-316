@@ -9,6 +9,7 @@ from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Nu
 from flask_sqlalchemy import SQLAlchemy
 from .models.product import Product
 from .models.purchase import Purchase
+from .models.purchaseDetail import PurchaseDetail
 from .models.reviews import ProductReview
 from .models.order import Order
 from .models.user import User
