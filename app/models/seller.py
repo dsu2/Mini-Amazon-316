@@ -1,6 +1,7 @@
 from flask_login import UserMixin
 from flask import current_app as app
 from werkzeug.security import generate_password_hash, check_password_hash
+import sys
 
 from .. import login
 
@@ -19,6 +20,17 @@ FROM Sellers
 WHERE uid = :uid
 """,
                               uid=uid)
+        return rows[0][0] if rows else None
+        
+    @staticmethod
+    def get_uid(sid):
+        rows = app.db.execute("""
+SELECT uid
+FROM Sellers
+WHERE id = :id
+""",
+                              id=sid)
+        print(rows, file = sys.stdout)
         return rows[0][0] if rows else None
 
     @staticmethod

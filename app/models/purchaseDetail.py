@@ -1,5 +1,5 @@
 from flask import current_app as app
-
+import sys
 
 class PurchaseDetail:
     def __init__(self, purch_id,  total_amount, no_of_items, fulfilled):
@@ -26,6 +26,7 @@ RETURNING pid
 
     @staticmethod
     def get_by_purchaseid(purch_id):
+        print(purch_id, file = sys.stdout)
         rows = app.db.execute('''
 SELECT purch_id,  total_amount, no_of_items, fulfilled
 FROM PurchasesDetails

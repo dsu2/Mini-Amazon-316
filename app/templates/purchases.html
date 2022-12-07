@@ -46,7 +46,7 @@
         {% for purchase in purchase_history%}
         <tr>
             <th scope="row">{{purchase.id}}</th>
-            <td>{{purchase.pid}}</td>
+            <td><a href = "{{ url_for('products.productDetails', productid =purchase.pid) }}"> {{purchase.pid}}</a></td>
             <td>{{purchase.time_purchased}}</td>
             <td>
                 <a href="{{ url_for('purchases.purchaseDetails', purchaseid=purchase.id) }}"

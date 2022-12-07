@@ -64,7 +64,7 @@ class nameEditForm(FlaskForm):
     new_lastname = StringField('Last Name', validators=[DataRequired()])
     submit = SubmitField('Submit Changes')
 
-#password editing form   
+#password editing form
 class passwordEditForm(FlaskForm):
     new_password = PasswordField('New Password', validators=[DataRequired()])
     new_password2 = PasswordField(
@@ -281,13 +281,11 @@ def publicprofile(userid = None):
         userpagination = Pagination(page=page, total=len(userreviews), record_name='product reviews', per_page=per_page)
 
     sellerid = Seller.get_sid(userid)
-    print(sellerid, file = sys.stdout)
-    print(userid)
     if sellerid != None:
         form = addReviewForm()
         if form.validate_on_submit():
             if current_user.get_id() != None and len(Purchase.get_by_uid_sid(uid=current_user.get_id(), sid = sellerid) )!= 0:
-                result = SellerReview.addSellerReview(sid = sellerid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)  
+                result = SellerReview.addSellerReview(sid = sellerid, uid = current_user.get_id(), text = form.text.data, rating = form.val.data)
                 if result == None:
                     errorReview = "You have reviewed this seller."
             else:
@@ -305,7 +303,7 @@ def publicprofile(userid = None):
         if avgreview!= None:
             avgreview = round(SellerReview.findAvgRating(sid=sellerid), 2)
         numreview = SellerReview.findNumReview(sid=sellerid)
-   
+
     return render_template('publicprofile.html', user_info=user_info, userpagination = userpagination, \
         sellerpagination = sellerpagination, userreviews = pagination_userreviews, sellerid = sellerid, \
         avgreview = avgreview, numreview = numreview, sellerreviews=pagination_sellerreviews, form = form, \
@@ -319,7 +317,7 @@ def editReview(sellersuserid = None):
     if editform.validate_on_submit():
         SellerReview.editSellerReview(sid = Seller.get_sid(sellersuserid), uid = userid, text = editform.text.data, rating = editform.val.data)
         return redirect(url_for('users.publicprofile', userid = sellersuserid))
-   
+
     if removeform.validate_on_submit():
         print('Remove form is Valid', file=sys.stdout)
         SellerReview.removeSellerReview(sid = Seller.get_sid(sellersuserid), uid = userid)

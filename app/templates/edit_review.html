@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-
 <form action="{{url_for('products.editReview', productid=productid)}}" method="post">
   {{ editform.hidden_tag() }}
   <p>
@@ -11,7 +10,7 @@
     {{ editform.val(type="number") }}
     {{ editform.submit(class_="btn btn-black") }}
   </p>
-</form> 
+</form>
 
 <form action="{{url_for('products.editReview', productid=productid)}}" method="post">
     {{ removeform.hidden_tag() }}
