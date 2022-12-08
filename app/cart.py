@@ -107,6 +107,7 @@ def submit_cart():
         print(PurchaseDetail.get_details(purchase_id))
 
         
-        cart = Cart.remove_all(current_user.id)
+        Cart.remove_all(current_user.id)
+        total = 0
         print(cart)
     return render_template('cart.html', cart=cart, total=total, error=error)

@@ -40,7 +40,7 @@ def yourPurchases():
 @bp.route('/your-purchases/<int:purch_id>', methods=['GET', 'POST'])
 def purchaseDetails(purch_id):
     if current_user.is_authenticated:
-        
+        fulfillment = 'Not All Order Fullfilled'
         purchase = Purchase.get_by_uid(current_user.id)
         purchase_detail = PurchaseDetail.get_details(purch_id)
         total=0
@@ -48,6 +48,18 @@ def purchaseDetails(purch_id):
         for item in purchase_detail:
             total += item.subtotal
             total_item += item.no_of_items
+
+        for item in purchase_detail:
+            if item.fulfilled == True:
+                fulfillment = 'All Orders Fullfilled'
+                print(f'fulfillemnt {item.fulfilled}')
+            else:
+                fulfillment = 'Not All Orders Fullfilled'
     return render_template('purchase_detailed.html', 
-                        purchase = purchase, purchase_detail = purchase_detail,purch_id=purch_id,total=total, total_item=total_item, Seller = Seller)
+                        purchase = purchase, purchase_detail = purchase_detail,
+                        purch_id=purch_id,total=total, total_item=total_item, 
+                        Seller = Seller, fulfillment=fulfillment)
+
+
+
 
