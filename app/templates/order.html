@@ -16,7 +16,6 @@
       <th scope="col">Quantity</th>
         <th scope="col">Price</th>
         <th scope="col">Subtotal</th>
-        <th scope="col">Fullfillment Status</th>
 
 
     </tr>
@@ -41,9 +40,7 @@
     <button>Place Order</button>
     </form>
   <h2 style="text-align: center;" >Grant total: {{ total }}</h2>
-  <form method="post"  action="{{ url_for('purchases.yourPurchases') }}">
-    <button id="button1" type="submit">View Recent Purchases</button>
-    </form>
+
 </table>
 {% else %}
 <p><a href="{{ url_for('users.login') }}">Log in</a> to view your cart!</p>
