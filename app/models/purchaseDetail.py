@@ -41,4 +41,3 @@ RETURNING purch_id
         except Exception as e:
             print(str(e))
             return None
-
