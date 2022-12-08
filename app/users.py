@@ -301,7 +301,9 @@ def publicprofile(userid = None):
         pagination_sellerreviews = sellerreviews[offset:offset+per_page]
         print(pagination_sellerreviews, file = sys.stdout)
         sellerpagination = Pagination(page=page, total=len(sellerreviews), record_name='seller reviews', per_page=per_page)
-        avgreview = round(SellerReview.findAvgRating(sid=sellerid), 2)
+        avgreview = SellerReview.findAvgRating(sid=sellerid)
+        if avgreview != None:
+            avgreview = round(avgreview, 2)
         numreview = SellerReview.findNumReview(sid=sellerid)
 
     return render_template('publicprofile.html', user_info=user_info, userpagination = userpagination, \
