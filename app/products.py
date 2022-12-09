@@ -82,7 +82,7 @@ def shelf():
     form = SearchForm()
     if form.validate_on_submit():
         return redirect(url_for('products.shelf', available='True', number=form.k.data, category=form.category.data, search=form.search.data, byWhat=form.byWhat.data))
-        
+
     number = request.args.get('number','')
     category = request.args.get('category','')
     search = request.args.get('search','')
@@ -103,6 +103,8 @@ def listings():
         return redirect(url_for('users.login'))
     userid = current_user.get_id()
     sid = Seller.get_sid(current_user.id)
+    if sid is None:
+        return render_template('sellerSignUp.html')
     page, per_page, offset = get_page_args(page_parameter='page', per_page_parameter='per_page')
     per_page=50
 
@@ -138,13 +140,14 @@ def productDetails(productid=None, sellerid=None):
     sellerid = request.args.get('sellerid','')
     print(productid, file=sys.stdout)
     print(sellerid, file=sys.stdout)
-   
-    if sellerid !="":
-        myUID = Cart.addToCart(current_user.id, productid, sellerid, 1)
-        if myUID is None:
-            error = "Already in cart! Adjust quantity in cart."
-        else:
-            error = "Success! Added to cart"
+
+    if current_user.is_authenticated:
+        if sellerid !="":
+            myUID = Cart.addToCart(current_user.id, productid, sellerid, 1)
+            if myUID is None:
+                error = "Already in cart! Adjust quantity in cart."
+            else:
+                error = "Success! Added to cart"
 
     form = ReviewForm()
     if form.validate_on_submit():

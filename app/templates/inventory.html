@@ -1,30 +1,18 @@
 {% extends "base.html" %}
-
 {% block content %}
-<form action="" method="post">
-  {{ iform.hidden_tag() }}
-  <p>
-    {{ iform.sid.label }}
-    {{ iform.sid(type="number", min="1", max="10000") }}
-    {{ iform.submit(class_="btn btn-black") }}
-  </p>
-
-</form>
-
-<br><br>
+{% if current_user.is_authenticated %}
+<h2>Inventory:</h2>
 <a href="{{url_for('products.addProduct')}}">Post a product</a>
 <br><br>
-
-<br>
-
-<h2>Inventory:</h2>
 <table class='table table-hover table-bordered container'>
   <thead class="thead-dark">
     <tr>
       <th scope="col">User/Seller ID</th>
       <th scope="col">Product ID</th>
+      <th scope="col">Product Name</th>
       <th scope="col">Num Items</th>
-        <th scope="col">Modify</th>
+      <th scope="col">Edit Quantity</th>
+      <th scope="col">Modify</th>
     </tr>
   </thead>
   <tbody>
@@ -32,14 +20,61 @@
       <tr>
         <th scope="row">{{inv.sid}}</th>
         <td>{{inv.pid}}</td>
+        <td>{{inv.pname}}</td>
         <td>{{inv.invNum}}</td>
-      <td>
-        <form method="post" action="{{ url_for('inventory.remove',pid=inv.pid) }}">
-  <button type="submit">Delete</button>
-</form>
-      </td>
+        <td>
+          <form method="post" action="{{ url_for('inventory.edit_num',pid=inv.pid, sid=inv.sid) }}" >
+          <input id="number" type="number" name="quantity" value=“0” />
+          <input type="submit"></form>
+        </td>
+        <td>
+          <form method="post" action="{{ url_for('inventory.remove',pid=inv.pid) }}">
+          <button type="submit">Delete</button>
+          </form>
+        </td>
       </tr>
     {% endfor %}
   </tbody>
 </table>
+
+<br>
+
+<h2>Orders:</h2>
+<table class='table table-hover table-bordered container'>
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">User ID</th>
+      <th scope="col">Firstname</th>
+      <th scope="col">User Address</th>
+      <th scope="col">Total Items</th>
+      <th scope="col">UTC Time Purchased</th>
+      <th scope="col">Fulfilled</th>
+      <th scope="col">Mark Fulfilled</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for ord in orders%}
+      <tr>
+        <th scope="row">{{ord.uid}}</th>
+        <td>{{ord.firstname}}</td>
+        <td>{{ord.address}}</td>
+        <td>{{ord.no_of_items}}</td>
+        <td>{{ord.fulfilled}}</td>
+        <td>{{ord.time_purchased}}</td>
+          <td>
+            <form method="post" action="{{ url_for('inventory.mark_fulfilled', purch_id = ord.purch_id|int) }}">
+            <button type="submit">Fulfill</button>
+            </form>
+          </td>
+
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% else %}
+<p><a href="{{ url_for('users.login') }}">Log in as seller</a> to see Inventory!</p>
+
+{% endif %}
 {% endblock %}
